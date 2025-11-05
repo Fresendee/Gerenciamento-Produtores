@@ -172,4 +172,5 @@ Para dúvidas ou problemas, verifique:
 ---
 
 **Desenvolvido com ❤️ para facilitar a gestão rural**
-Ass: Fernando, Breno, Kayque, Yuri Robert, Eduardo, Emanuel (5° Periodo IMEPAC)
+
+- Ass: Fernando, Breno, Kayque, Yuri Robert, Eduardo, Emanuel (5° Periodo IMEPAC)
