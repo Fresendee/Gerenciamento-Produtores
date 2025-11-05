@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  # Serviço do Banco de Dados PostgreSQL
+  db:
+    image: postgres:14-alpine
+    container_name: postgres_db
+    restart: always
+    environment:
+      # Variáveis de ambiente do PostgreSQL
+      POSTGRES_DB: produtordb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      # Mapeia a porta 5433 do host para a porta 5432 do container
+      # O projeto Spring Boot será configurado para usar o nome do serviço 'db'
+      - "5433:5432"
+    volumes:
+      # Persistência dos dados do banco
+      - postgres_data:/var/lib/postgresql/data
+
+  # Serviço da Aplicação Spring Boot
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: produtor_rural_app
+    restart: always
+    ports:
+      # Mapeia a porta 8080 do host para a porta 8080 do container
+      - "8080:8080"
+    depends_on:
+      # Garante que o banco de dados inicie antes da aplicação
+      - db
+    environment:
+      # Configuração do banco de dados para a aplicação
+      # O nome do host é o nome do serviço do Docker Compose: 'db'
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/produtordb
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+
+# Volumes para persistência de dados
+volumes:
+  postgres_data:
