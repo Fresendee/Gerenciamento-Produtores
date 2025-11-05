@@ -172,3 +172,5 @@ Para dúvidas ou problemas, verifique:
 ---
 
 **Desenvolvido com ❤️ para facilitar a gestão rural**
+
+- DEVs: Fernando, Breno, Kayque, Yuri Robert, Eduardo, Emanuel (5° Periodo IMEPAC)
