@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Visita</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>📋 Registrar Visita Técnica</h2>
+        
+        <form th:action="@{/visitas/salvar}" th:object="${visita}" method="post">
+            <input type="hidden" th:field="*{id}"/>
+            
+            <label>
+                Data da Visita: <span style="color: red;">*</span>
+                <input type="date" th:field="*{dataVisita}" required/>
+            </label>
+            
+            <label>
+                Produtor: <span style="color: red;">*</span>
+                <select th:field="*{produtor.id}" required>
+                    <option value="">Selecione o produtor</option>
+                    <option th:each="p : ${produtores}" th:value="${p.id}" th:text="${p.nome}"></option>
+                </select>
+            </label>
+            
+            <label>
+                Diagnóstico: <span style="color: red;">*</span>
+                <textarea th:field="*{diagnostico}" required placeholder="Descreva o diagnóstico da propriedade..."></textarea>
+            </label>
+            
+            <label>
+                Recomendações: <span style="color: red;">*</span>
+                <textarea th:field="*{recomendacoes}" required placeholder="Descreva as recomendações técnicas..."></textarea>
+            </label>
+            
+            <div style="margin-top: 25px; text-align: center;">
+                <button type="submit">💾 Salvar</button>
+                <a href="/visitas" class="button" style="background: #6c757d;">❌ Cancelar</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

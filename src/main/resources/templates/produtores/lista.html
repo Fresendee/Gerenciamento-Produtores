@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Produtores</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>👨‍🌾 Produtores Cadastrados</h2>
+        
+        <div style="margin-bottom: 20px;">
+            <a href="/produtores/novo" class="button">➕ Novo Produtor</a>
+            <a href="/" class="button" style="background: #6c757d;">🏠 Voltar ao Início</a>
+        </div>
+        
+        <div th:if="${produtores.isEmpty()}" style="text-align: center; padding: 40px; background: #f8f9fa; border-radius: 8px;">
+            <p style="font-size: 1.2em; color: #666;">Nenhum produtor cadastrado ainda.</p>
+            <a href="/produtores/novo" class="button" style="margin-top: 15px;">Cadastrar Primeiro Produtor</a>
+        </div>
+        
+        <table th:if="${!produtores.isEmpty()}">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>CPF</th>
+                    <th>Telefone</th>
+                    <th>Localização</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="p : ${produtores}">
+                    <td th:text="${p.id}"></td>
+                    <td th:text="${p.nome}"></td>
+                    <td th:text="${p.cpf}"></td>
+                    <td th:text="${p.telefone ?: '-'}"></td>
+                    <td th:text="${p.localizacao ?: '-'}"></td>
+                    <td>
+                        <a th:href="@{'/produtores/editar/' + ${p.id}}" title="Editar">✏️ Editar</a> |
+                        <a th:href="@{'/produtores/excluir/' + ${p.id}}" 
+                           onclick="return confirm('Tem certeza que deseja excluir este produtor?')" 
+                           title="Excluir">🗑️ Excluir</a> |
+                        <a th:href="@{'/atividades/novo?produtorId=' + ${p.id}}" title="Adicionar Atividade">🌱 Atividade</a> |
+                        <a th:href="@{'/visitas/novo?produtorId=' + ${p.id}}" title="Registrar Visita">📋 Visita</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

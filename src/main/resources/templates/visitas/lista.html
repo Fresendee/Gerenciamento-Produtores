@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Visitas</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>📋 Visitas Registradas</h2>
+        
+        <div style="margin-bottom: 20px;">
+            <a href="/visitas/novo" class="button">➕ Registrar Visita</a>
+            <a href="/" class="button" style="background: #6c757d;">🏠 Voltar ao Início</a>
+        </div>
+        
+        <div th:if="${visitas.isEmpty()}" style="text-align: center; padding: 40px; background: #f8f9fa; border-radius: 8px;">
+            <p style="font-size: 1.2em; color: #666;">Nenhuma visita registrada ainda.</p>
+            <a href="/visitas/novo" class="button" style="margin-top: 15px;">Registrar Primeira Visita</a>
+        </div>
+        
+        <table th:if="${!visitas.isEmpty()}">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Data</th>
+                    <th>Produtor</th>
+                    <th>Diagnóstico</th>
+                    <th>Recomendações</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="v : ${visitas}">
+                    <td th:text="${v.id}"></td>
+                    <td th:text="${#temporals.format(v.dataVisita, 'dd/MM/yyyy')}"></td>
+                    <td th:text="${v.produtor != null ? v.produtor.nome : 'Sem produtor'}"></td>
+                    <td th:text="${v.diagnostico != null && v.diagnostico.length() > 50 ? v.diagnostico.substring(0, 50) + '...' : v.diagnostico}"></td>
+                    <td th:text="${v.recomendacoes != null && v.recomendacoes.length() > 50 ? v.recomendacoes.substring(0, 50) + '...' : v.recomendacoes}"></td>
+                    <td>
+                        <a th:href="@{'/visitas/excluir/' + ${v.id}}" 
+                           onclick="return confirm('Tem certeza que deseja excluir esta visita?')"
+                           title="Excluir">🗑️ Excluir</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

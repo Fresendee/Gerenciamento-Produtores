@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Atividades</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>🌱 Atividades Cadastradas</h2>
+        
+        <div style="margin-bottom: 20px;">
+            <a href="/atividades/novo" class="button">➕ Nova Atividade</a>
+            <a href="/" class="button" style="background: #6c757d;">🏠 Voltar ao Início</a>
+        </div>
+        
+        <div th:if="${atividades.isEmpty()}" style="text-align: center; padding: 40px; background: #f8f9fa; border-radius: 8px;">
+            <p style="font-size: 1.2em; color: #666;">Nenhuma atividade cadastrada ainda.</p>
+            <a href="/atividades/novo" class="button" style="margin-top: 15px;">Cadastrar Primeira Atividade</a>
+        </div>
+        
+        <table th:if="${!atividades.isEmpty()}">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tipo</th>
+                    <th>Descrição</th>
+                    <th>Produtor</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="a : ${atividades}">
+                    <td th:text="${a.id}"></td>
+                    <td th:text="${a.tipo}"></td>
+                    <td th:text="${a.descricao}"></td>
+                    <td th:text="${a.produtor != null ? a.produtor.nome : 'Sem produtor'}"></td>
+                    <td>
+                        <a th:href="@{'/atividades/excluir/' + ${a.id}}" 
+                           onclick="return confirm('Tem certeza que deseja excluir esta atividade?')"
+                           title="Excluir">🗑️ Excluir</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

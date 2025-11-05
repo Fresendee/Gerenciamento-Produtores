@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Atividade</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>🌱 Nova Atividade</h2>
+        
+        <form th:action="@{/atividades/salvar}" th:object="${atividade}" method="post">
+            <input type="hidden" th:field="*{id}"/>
+            
+            <label>
+                Tipo de Atividade: <span style="color: red;">*</span>
+                <select th:field="*{tipo}" required>
+                    <option value="">Selecione o tipo</option>
+                    <option value="Cultivo">🌾 Cultivo</option>
+                    <option value="Animal">🐄 Animal</option>
+                </select>
+            </label>
+            
+            <label>
+                Descrição: <span style="color: red;">*</span>
+                <input type="text" th:field="*{descricao}" required placeholder="Ex: Soja, Milho, Bovinos, etc."/>
+            </label>
+            
+            <label>
+                Produtor: <span style="color: red;">*</span>
+                <select th:field="*{produtor.id}" required>
+                    <option value="">Selecione o produtor</option>
+                    <option th:each="p : ${produtores}" th:value="${p.id}" th:text="${p.nome}"></option>
+                </select>
+            </label>
+            
+            <div style="margin-top: 25px; text-align: center;">
+                <button type="submit">💾 Salvar</button>
+                <a href="/atividades" class="button" style="background: #6c757d;">❌ Cancelar</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

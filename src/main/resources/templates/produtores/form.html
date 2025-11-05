@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Produtor</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h2 th:text="${produtor.id} == null ? '➕ Novo Produtor' : '✏️ Editar Produtor'"></h2>
+        
+        <form th:action="@{/produtores/salvar}" th:object="${produtor}" method="post">
+            <input type="hidden" th:field="*{id}"/>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
+                <label>
+                    Nome Completo: <span style="color: red;">*</span>
+                    <input type="text" th:field="*{nome}" required placeholder="Digite o nome completo"/>
+                </label>
+                
+                <label>
+                    CPF: <span style="color: red;">*</span>
+                    <input type="text" th:field="*{cpf}" required placeholder="000.000.000-00"/>
+                </label>
+                
+                <label>
+                    Telefone:
+                    <input type="text" th:field="*{telefone}" placeholder="(00) 00000-0000"/>
+                </label>
+                
+                <label>
+                    Localização:
+                    <input type="text" th:field="*{localizacao}" placeholder="Cidade/Estado"/>
+                </label>
+                
+                <label>
+                    Inscrição Produtor Rural:
+                    <input type="text" th:field="*{inscricaoProdutorRural}" placeholder="Número da inscrição"/>
+                </label>
+                
+                <label>
+                    Tamanho da Propriedade (hectares):
+                    <input type="number" step="0.01" th:field="*{tamanhoPropriedade}" placeholder="0.00"/>
+                </label>
+                
+                <label>
+                    Número de Pessoas na Família:
+                    <input type="number" th:field="*{numeroPessoasFamilia}" placeholder="0"/>
+                </label>
+            </div>
+            
+            <div style="margin-top: 25px; text-align: center;">
+                <button type="submit">💾 Salvar</button>
+                <a href="/produtores" class="button" style="background: #6c757d;">❌ Cancelar</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

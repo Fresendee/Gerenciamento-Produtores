@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Produtor Rural</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="fullscreen">
+    <div class="container">
+        <h1>🌾 Sistema de Gestão de Produtores Rurais</h1>
+        
+        <nav>
+            <a href="/produtores">👨‍🌾 Produtores</a>
+            <a href="/atividades">🌱 Atividades</a>
+            <a href="/visitas">📋 Visitas</a>
+        </nav>
+        
+        <hr/>
+        
+        <div style="text-align: center; padding: 40px 20px;">
+            <h2 style="border: none; color: #667eea;">Bem-vindo ao Sistema de Consultoria Rural</h2>
+            <p style="font-size: 1.1em; color: #666; max-width: 800px; margin: 20px auto;">
+                Este sistema foi desenvolvido para facilitar o cadastro e acompanhamento de produtores rurais,
+                suas atividades agrícolas e pecuárias, além do registro de visitas técnicas e consultorias.
+            </p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 40px;">
+                <div style="background: #f8f9fa; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <h3 style="color: #667eea; margin-bottom: 15px;">👨‍🌾 Produtores</h3>
+                    <p>Cadastre e gerencie informações completas dos produtores rurais, incluindo dados pessoais e da propriedade.</p>
+                    <a href="/produtores" class="button" style="margin-top: 15px;">Acessar</a>
+                </div>
+                
+                <div style="background: #f8f9fa; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <h3 style="color: #667eea; margin-bottom: 15px;">🌱 Atividades</h3>
+                    <p>Registre as atividades de cultivo e criação de animais desenvolvidas pelos produtores.</p>
+                    <a href="/atividades" class="button" style="margin-top: 15px;">Acessar</a>
+                </div>
+                
+                <div style="background: #f8f9fa; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <h3 style="color: #667eea; margin-bottom: 15px;">📋 Visitas</h3>
+                    <p>Documente visitas técnicas com diagnósticos e recomendações para cada produtor.</p>
+                    <a href="/visitas" class="button" style="margin-top: 15px;">Acessar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
