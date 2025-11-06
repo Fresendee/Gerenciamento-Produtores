@@ -162,18 +162,7 @@ O sistema possui uma interface moderna e responsiva com:
 - Verifique se o JDK 17 está instalado e configurado
 - Vá em File → Project Structure → Project → SDK
 
-## 📄 Licença
 
-Este projeto é de código aberto e pode ser utilizado livremente para fins educacionais e comerciais.
-
-## 👨‍💻 Suporte
-
-Para dúvidas ou problemas, verifique:
-- Logs no console do IntelliJ
-- Arquivo `application.properties` está correto
-- Todas as dependências foram baixadas pelo Maven
-
----
 
 **Desenvolvido com ❤️ para facilitar a gestão rural**
 
