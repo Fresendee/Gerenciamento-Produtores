@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${usuario.id != null ? 'Editar Usuário' : 'Novo Usuário'}">Usuário</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/theme-toggle.js"></script>
+</head>
+<body>
+<div class="dashboard-layout">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h1>
+                <span class="material-icons-round" style="color: var(--accent-yellow);">agriculture</span>
+                NPA
+            </h1>
+        </div>
+        <nav class="sidebar-nav">
+            <ul>
+                <li>
+                    <a href="/">
+                        <span class="material-icons-round">dashboard</span>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="/produtores">
+                        <span class="material-icons-round">group</span>
+                        Produtores
+                    </a>
+                </li>
+                <li>
+                    <a href="/atividades">
+                        <span class="material-icons-round">grass</span>
+                        Atividades
+                    </a>
+                </li>
+                <li>
+                    <a href="/visitas">
+                        <span class="material-icons-round">assignment</span>
+                        Visitas Técnicas
+                    </a>
+                </li>
+                <li>
+                    <a href="/usuarios" class="active">
+                        <span class="material-icons-round">manage_accounts</span>
+                        Usuários
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        
+        <!-- Theme Toggle -->
+        <div class="theme-toggle-container">
+            <label class="theme-toggle">
+                <input type="checkbox" id="theme-toggle">
+                <span class="theme-toggle-slider"></span>
+            </label>
+            <span class="theme-toggle-label">
+                <span class="material-icons-round theme-icon-light">light_mode</span>
+                <span class="material-icons-round theme-icon-dark">dark_mode</span>
+            </span>
+        </div>
+    </div>
+
+    <!-- Conteúdo Principal -->
+    <div class="main-content">
+        <div class="container">
+            <!-- Cabeçalho -->
+            <div class="page-header">
+                <div>
+                    <h1 th:text="${usuario.id != null ? 'Editar Usuário' : 'Novo Usuário'}">Usuário</h1>
+                    <p style="color: var(--text-secondary); font-size: 16px;">
+                        Preencha os dados do usuário abaixo.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Formulário -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Dados do Usuário</h3>
+                </div>
+                <div class="card-content">
+                    <form th:action="${usuario.id != null ? '/usuarios/atualizar/' + usuario.id : '/usuarios/salvar'}" 
+                          method="post" 
+                          th:object="${usuario}">
+                        
+                        <!-- Nome de Usuário -->
+                        <div class="form-group">
+                            <label for="username">
+                                <span class="material-icons-round" style="font-size: 16px; vertical-align: middle;">person</span>
+                                Nome de Usuário *
+                            </label>
+                            <input type="text" 
+                                   id="username" 
+                                   th:field="*{username}" 
+                                   class="form-control"
+                                   th:classappend="${#fields.hasErrors('username')} ? 'is-invalid' : ''"
+                                   required>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">
+                                Erro
+                            </div>
+                        </div>
+
+                        <!-- Senha -->
+                        <div class="form-group">
+                            <label for="password">
+                                <span class="material-icons-round" style="font-size: 16px; vertical-align: middle;">lock</span>
+                                Senha <span th:if="${usuario.id == null}">*</span>
+                                <span th:if="${usuario.id != null}" style="color: var(--text-secondary); font-size: 12px;">
+                                    (deixe em branco para manter a senha atual)
+                                </span>
+                            </label>
+                            <input type="password" 
+                                   id="password" 
+                                   th:field="*{password}" 
+                                   class="form-control"
+                                   th:classappend="${#fields.hasErrors('password')} ? 'is-invalid' : ''"
+                                   th:required="${usuario.id == null}"
+                                   placeholder="Digite a senha">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">
+                                Erro
+                            </div>
+                        </div>
+
+                        <!-- Roles (Permissões) -->
+                        <div class="form-group">
+                            <label>
+                                <span class="material-icons-round" style="font-size: 16px; vertical-align: middle;">security</span>
+                                Permissões *
+                            </label>
+                            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 8px;">
+                                <label class="checkbox-label" th:each="role : ${rolesDisponiveis}">
+                                    <input type="checkbox" 
+                                           name="roles" 
+                                           th:value="${role}"
+                                           th:checked="${usuario.roles != null && usuario.roles.contains(role)}">
+                                    <span th:text="${role == 'ROLE_ADMIN' ? 'Administrador' : 'Usuário Comum'}">Role</span>
+                                    <small th:if="${role == 'ROLE_ADMIN'}" style="color: var(--text-secondary); display: block; margin-left: 24px;">
+                                        Acesso completo ao sistema, incluindo gerenciamento de usuários
+                                    </small>
+                                    <small th:if="${role == 'ROLE_USER'}" style="color: var(--text-secondary); display: block; margin-left: 24px;">
+                                        Acesso padrão às funcionalidades do sistema
+                                    </small>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Status -->
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" 
+                                       th:field="*{enabled}"
+                                       checked>
+                                <span>Usuário Ativo</span>
+                                <small style="color: var(--text-secondary); display: block; margin-left: 24px;">
+                                    Desmarque para desativar o acesso do usuário sem excluí-lo
+                                </small>
+                            </label>
+                        </div>
+
+                        <!-- Botões -->
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <span class="material-icons-round">save</span>
+                                Salvar
+                            </button>
+                            <a href="/usuarios" class="btn btn-outline">
+                                <span class="material-icons-round">cancel</span>
+                                Cancelar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.checkbox-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    cursor: pointer;
+    padding: 12px;
+    border-radius: 8px;
+    transition: background 0.2s ease;
+}
+
+.checkbox-label:hover {
+    background: var(--background-light);
+}
+
+.checkbox-label input[type="checkbox"] {
+    margin-top: 2px;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.invalid-feedback {
+    color: #c62828;
+    font-size: 14px;
+    margin-top: 4px;
+    display: block;
+}
+
+.form-control.is-invalid {
+    border-color: #c62828;
+}
+
+.form-control.is-invalid:focus {
+    border-color: #c62828;
+    box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.1);
+}
+</style>
+</body>
+</html>

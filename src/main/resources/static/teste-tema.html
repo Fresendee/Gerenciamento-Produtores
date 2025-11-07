@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Tema - NPA</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/theme-toggle.js"></script>
+    <style>
+        body {
+            padding: 40px;
+            font-family: 'Inter', sans-serif;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .test-card {
+            background: var(--bg-white);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-md);
+        }
+        .test-title {
+            color: var(--text-primary);
+            margin-bottom: 20px;
+        }
+        .test-text {
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+        }
+        .theme-info {
+            background: var(--background-light);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .toggle-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            background: var(--background-light);
+            border-radius: 8px;
+        }
+        .btn-reset {
+            padding: 10px 20px;
+            background: var(--primary-green);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn-reset:hover {
+            background: var(--primary-green-dark);
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1 class="test-title">🧪 Teste de Tema - Sistema NPA</h1>
+        
+        <div class="test-card">
+            <h2 style="color: var(--text-primary); margin-bottom: 15px;">Status do Tema</h2>
+            <div class="theme-info">
+                <p><strong>Tema Atual:</strong> <span id="current-theme">Carregando...</span></p>
+                <p><strong>Tema Salvo:</strong> <span id="saved-theme">Carregando...</span></p>
+                <p><strong>Atributo data-theme:</strong> <span id="data-theme-attr">Carregando...</span></p>
+            </div>
+        </div>
+
+        <div class="test-card">
+            <h2 style="color: var(--text-primary); margin-bottom: 15px;">Controles</h2>
+            
+            <div class="toggle-wrapper">
+                <label class="theme-toggle">
+                    <input type="checkbox" id="theme-toggle">
+                    <span class="theme-toggle-slider"></span>
+                </label>
+                <span class="theme-toggle-label">
+                    <span class="material-icons-round theme-icon-light">light_mode</span>
+                    <span class="material-icons-round theme-icon-dark">dark_mode</span>
+                    Modo Escuro
+                </span>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <button class="btn-reset" onclick="resetTheme()">
+                    🔄 Resetar Tema (Voltar ao Padrão)
+                </button>
+            </div>
+        </div>
+
+        <div class="test-card">
+            <h2 style="color: var(--text-primary); margin-bottom: 15px;">Teste Visual</h2>
+            <p class="test-text">Este é um texto de exemplo em cor secundária.</p>
+            <p style="color: var(--text-primary);">Este é um texto em cor primária.</p>
+            <div style="background: var(--primary-green); color: white; padding: 10px; border-radius: 6px; margin-top: 10px;">
+                Elemento com cor primária verde
+            </div>
+        </div>
+
+        <div class="test-card">
+            <h2 style="color: var(--text-primary); margin-bottom: 15px;">Console de Debug</h2>
+            <div id="debug-console" style="background: #000; color: #0f0; padding: 15px; border-radius: 6px; font-family: monospace; font-size: 12px; max-height: 200px; overflow-y: auto;">
+                Aguardando eventos...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Função para atualizar informações
+        function updateThemeInfo() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme') || 'light';
+            const savedTheme = localStorage.getItem('npa-theme-preference') || 'nenhum';
+            
+            document.getElementById('current-theme').textContent = currentTheme;
+            document.getElementById('saved-theme').textContent = savedTheme;
+            document.getElementById('data-theme-attr').textContent = html.getAttribute('data-theme') || '(nenhum - modo claro)';
+            
+            addDebugLog('Tema atualizado: ' + currentTheme);
+        }
+
+        // Função para adicionar log no console de debug
+        function addDebugLog(message) {
+            const console = document.getElementById('debug-console');
+            const time = new Date().toLocaleTimeString();
+            console.innerHTML += `[${time}] ${message}\n`;
+            console.scrollTop = console.scrollHeight;
+        }
+
+        // Função para resetar tema
+        function resetTheme() {
+            localStorage.removeItem('npa-theme-preference');
+            document.documentElement.removeAttribute('data-theme');
+            document.getElementById('theme-toggle').checked = false;
+            addDebugLog('🔄 Tema resetado para padrão (claro)');
+            updateThemeInfo();
+        }
+
+        // Observer para detectar mudanças no atributo data-theme
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.attributeName === 'data-theme') {
+                    addDebugLog('👁️ Atributo data-theme mudou!');
+                    updateThemeInfo();
+                }
+            });
+        });
+
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['data-theme']
+        });
+
+        // Listener no toggle
+        document.getElementById('theme-toggle').addEventListener('change', function() {
+            addDebugLog('🖱️ Toggle clicado! Checked: ' + this.checked);
+        });
+
+        // Atualiza informações ao carregar
+        window.addEventListener('load', function() {
+            addDebugLog('✅ Página carregada');
+            updateThemeInfo();
+        });
+
+        // Atualiza a cada 1 segundo (para debug)
+        setInterval(updateThemeInfo, 1000);
+    </script>
+</body>
+</html>

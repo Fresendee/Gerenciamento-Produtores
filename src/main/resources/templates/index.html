@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Núcleo de Práticas Agrícolas</title>
     <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/theme-toggle.js"></script>
 </head>
 <body>
 <div class="dashboard-layout">
@@ -42,9 +43,26 @@
                         Visitas Técnicas
                     </a>
                 </li>
-                <!-- Adicionar mais links de navegação aqui conforme necessário -->
+                <li>
+                    <a href="/usuarios">
+                        <span class="material-icons-round">manage_accounts</span>
+                        Usuários
+                    </a>
+                </li>
             </ul>
         </nav>
+        
+        <!-- Theme Toggle -->
+        <div class="theme-toggle-container">
+            <label class="theme-toggle">
+                <input type="checkbox" id="theme-toggle">
+                <span class="theme-toggle-slider"></span>
+            </label>
+            <span class="theme-toggle-label">
+                <span class="material-icons-round theme-icon-light">light_mode</span>
+                <span class="material-icons-round theme-icon-dark">dark_mode</span>
+            </span>
+        </div>
     </div>
 
     <!-- Conteúdo Principal -->
@@ -57,6 +75,15 @@
                     <p style="color: var(--text-secondary); font-size: 16px;">
                         Visão geral e acesso rápido aos módulos do sistema.
                     </p>
+                </div>
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    <span sec:authentication="name" style="color: var(--text-secondary);">Usuário</span>
+                    <form th:action="@{/logout}" method="post" style="margin: 0;">
+                        <button type="submit" class="btn btn-outline" style="display: flex; align-items: center; gap: 8px;">
+                            <span class="material-icons-round">logout</span>
+                            Sair
+                        </button>
+                    </form>
                 </div>
             </div>
 
@@ -111,6 +138,24 @@
                         e recomendações especializadas para cada produtor.
                     </div>
                     <a href="/visitas" class="btn btn-outline">
+                        <span class="material-icons-round">arrow_forward</span>
+                        Acessar Módulo
+                    </a>
+                </div>
+
+                <!-- Card Usuários -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background: #5e35b1;">
+                            <span class="material-icons-round">manage_accounts</span>
+                        </div>
+                        <h3 class="card-title">Gerenciamento de Usuários</h3>
+                    </div>
+                    <div class="card-content">
+                        Administração completa de usuários do sistema, incluindo criação de novos acessos,
+                        edição de permissões e alteração de senhas.
+                    </div>
+                    <a href="/usuarios" class="btn btn-outline">
                         <span class="material-icons-round">arrow_forward</span>
                         Acessar Módulo
                     </a>

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${produtor.id} == null ? 'Novo Produtor' : 'Editar Produtor'">Cadastro de Produtor</title>
     <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/theme-toggle.js"></script>
 </head>
 <body>
 <div class="dashboard-layout">
@@ -42,8 +43,26 @@
                         Visitas Técnicas
                     </a>
                 </li>
+                <li>
+                    <a href="/usuarios">
+                        <span class="material-icons-round">manage_accounts</span>
+                        Usuários
+                    </a>
+                </li>
             </ul>
         </nav>
+        
+        <!-- Theme Toggle -->
+        <div class="theme-toggle-container">
+            <label class="theme-toggle">
+                <input type="checkbox" id="theme-toggle">
+                <span class="theme-toggle-slider"></span>
+            </label>
+            <span class="theme-toggle-label">
+                <span class="material-icons-round theme-icon-light">light_mode</span>
+                <span class="material-icons-round theme-icon-dark">dark_mode</span>
+            </span>
+        </div>
     </div>
 
     <!-- Conteúdo Principal -->

@@ -19,6 +19,7 @@
     /* Cores de Fundo e Layout */
     --bg-light: #F4F6F8; /* Fundo principal muito claro */
     --bg-white: #FFFFFF; /* Fundo de cards e painéis */
+    --background-light: #F5F5F5; /* Fundo alternativo */
     --border-color: #E0E0E0; /* Linhas e bordas sutis */
     --shadow-color: rgba(0, 0, 0, 0.05);
 
@@ -869,4 +870,204 @@ select {
     .sidebar-nav li a {
         justify-content: center;
     }
+}
+
+/* ========================================
+   DARK MODE - Modo Escuro
+   ======================================== */
+
+/* Variáveis para Dark Mode */
+[data-theme="dark"] {
+    /* Cores Primárias (ajustadas para dark) */
+    --primary-green: #4CAF50;
+    --primary-green-light: #66BB6A;
+    --primary-green-dark: #388E3C;
+    --accent-yellow: #FFD54F;
+    --secondary-brown: #A1887F;
+
+    /* Cores de Fundo e Layout */
+    --bg-light: #121212; /* Fundo principal escuro */
+    --bg-white: #1E1E1E; /* Fundo de cards escuro */
+    --background-light: #2C2C2C; /* Fundo alternativo */
+    --border-color: #333333; /* Bordas escuras */
+    --shadow-color: rgba(0, 0, 0, 0.3);
+
+    /* Cores de Texto */
+    --text-primary: #E0E0E0; /* Texto principal claro */
+    --text-secondary: #B0B0B0; /* Texto secundário */
+    --text-light: #FFFFFF;
+
+    /* Status (ajustados) */
+    --success: #66BB6A;
+    --warning: #FFB74D;
+    --error: #EF5350;
+    --info: #42A5F5;
+
+    /* Sombras mais fortes */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Ajustes específicos para elementos em dark mode */
+[data-theme="dark"] .sidebar {
+    background: #1E1E1E;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] .card {
+    background: #1E1E1E;
+    border: 1px solid #333333;
+}
+
+[data-theme="dark"] .table {
+    background: #1E1E1E;
+}
+
+[data-theme="dark"] .table thead {
+    background: #2C2C2C;
+}
+
+[data-theme="dark"] .table tbody tr {
+    border-bottom: 1px solid #333333;
+}
+
+[data-theme="dark"] .table tbody tr:hover {
+    background: #2C2C2C;
+}
+
+[data-theme="dark"] .form-control,
+[data-theme="dark"] input[type="text"],
+[data-theme="dark"] input[type="password"],
+[data-theme="dark"] input[type="email"],
+[data-theme="dark"] input[type="number"],
+[data-theme="dark"] input[type="date"],
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+    background: #2C2C2C;
+    border-color: #333333;
+    color: #E0E0E0;
+}
+
+[data-theme="dark"] .form-control:focus,
+[data-theme="dark"] input:focus,
+[data-theme="dark"] textarea:focus,
+[data-theme="dark"] select:focus {
+    background: #2C2C2C;
+    border-color: var(--primary-green);
+    color: #E0E0E0;
+}
+
+[data-theme="dark"] .btn-outline {
+    background: transparent;
+    border-color: #333333;
+    color: #E0E0E0;
+}
+
+[data-theme="dark"] .btn-outline:hover {
+    background: #2C2C2C;
+    border-color: var(--primary-green);
+}
+
+[data-theme="dark"] .info-box {
+    background: #2C2C2C;
+    border-color: #333333;
+}
+
+[data-theme="dark"] code {
+    background: #2C2C2C;
+    color: #FFD54F;
+}
+
+/* ========================================
+   THEME TOGGLE SWITCH - Interruptor de Tema
+   ======================================== */
+
+.theme-toggle-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 24px;
+    border-top: 1px solid var(--border-color);
+    margin-top: auto;
+}
+
+.theme-toggle {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.theme-toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.theme-toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.3s;
+    border-radius: 24px;
+}
+
+.theme-toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.3s;
+    border-radius: 50%;
+}
+
+.theme-toggle input:checked + .theme-toggle-slider {
+    background-color: var(--primary-green);
+}
+
+.theme-toggle input:checked + .theme-toggle-slider:before {
+    transform: translateX(26px);
+}
+
+.theme-toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    user-select: none;
+}
+
+.theme-toggle-label .material-icons-round {
+    font-size: 18px;
+}
+
+/* Ícones de sol e lua */
+.theme-icon-light {
+    color: #FFC107;
+}
+
+.theme-icon-dark {
+    color: #5E35B1;
+}
+
+/* Transição suave ao trocar de tema */
+body,
+.sidebar,
+.main-content,
+.card,
+.table,
+.form-control,
+input,
+textarea,
+select,
+.btn-outline {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }

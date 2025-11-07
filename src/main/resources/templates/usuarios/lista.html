@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuários - Núcleo de Práticas Agrícolas</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/theme-toggle.js"></script>
+</head>
+<body>
+<div class="dashboard-layout">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h1>
+                <span class="material-icons-round" style="color: var(--accent-yellow);">agriculture</span>
+                NPA
+            </h1>
+        </div>
+        <nav class="sidebar-nav">
+            <ul>
+                <li>
+                    <a href="/">
+                        <span class="material-icons-round">dashboard</span>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="/produtores">
+                        <span class="material-icons-round">group</span>
+                        Produtores
+                    </a>
+                </li>
+                <li>
+                    <a href="/atividades">
+                        <span class="material-icons-round">grass</span>
+                        Atividades
+                    </a>
+                </li>
+                <li>
+                    <a href="/visitas">
+                        <span class="material-icons-round">assignment</span>
+                        Visitas Técnicas
+                    </a>
+                </li>
+                <li>
+                    <a href="/usuarios" class="active">
+                        <span class="material-icons-round">manage_accounts</span>
+                        Usuários
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        
+        <!-- Theme Toggle -->
+        <div class="theme-toggle-container">
+            <label class="theme-toggle">
+                <input type="checkbox" id="theme-toggle">
+                <span class="theme-toggle-slider"></span>
+            </label>
+            <span class="theme-toggle-label">
+                <span class="material-icons-round theme-icon-light">light_mode</span>
+                <span class="material-icons-round theme-icon-dark">dark_mode</span>
+            </span>
+        </div>
+    </div>
+
+    <!-- Conteúdo Principal -->
+    <div class="main-content">
+        <div class="container">
+            <!-- Cabeçalho -->
+            <div class="page-header">
+                <div>
+                    <h1>Gerenciamento de Usuários</h1>
+                    <p style="color: var(--text-secondary); font-size: 16px;">
+                        Gerencie os usuários do sistema, crie novos acessos e altere permissões.
+                    </p>
+                </div>
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    <span sec:authentication="name" style="color: var(--text-secondary);">Usuário</span>
+                    <form th:action="@{/logout}" method="post" style="margin: 0;">
+                        <button type="submit" class="btn btn-outline" style="display: flex; align-items: center; gap: 8px;">
+                            <span class="material-icons-round">logout</span>
+                            Sair
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Mensagens -->
+            <div th:if="${mensagem}" class="alert alert-success">
+                <span class="material-icons-round">check_circle</span>
+                <span th:text="${mensagem}">Mensagem</span>
+            </div>
+            <div th:if="${erro}" class="alert alert-error">
+                <span class="material-icons-round">error</span>
+                <span th:text="${erro}">Erro</span>
+            </div>
+
+            <!-- Ações -->
+            <div style="margin-bottom: 24px;">
+                <a href="/usuarios/novo" class="btn btn-primary">
+                    <span class="material-icons-round">add</span>
+                    Novo Usuário
+                </a>
+                <a href="/usuarios/minha-senha" class="btn btn-outline">
+                    <span class="material-icons-round">lock</span>
+                    Alterar Minha Senha
+                </a>
+            </div>
+
+            <!-- Tabela de Usuários -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Lista de Usuários</h3>
+                </div>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome de Usuário</th>
+                                <th>Roles</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="usuario : ${usuarios}">
+                                <td th:text="${usuario.id}">1</td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <span class="material-icons-round" style="color: var(--primary-green);">person</span>
+                                        <strong th:text="${usuario.username}">admin</strong>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span th:each="role, iterStat : ${usuario.roles}" 
+                                          class="badge"
+                                          th:classappend="${role == 'ROLE_ADMIN'} ? 'badge-admin' : 'badge-user'">
+                                        <span th:text="${role == 'ROLE_ADMIN'} ? 'Admin' : 'Usuário'">Role</span>
+                                        <span th:if="${!iterStat.last}">, </span>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span th:if="${usuario.enabled}" class="badge badge-success">
+                                        <span class="material-icons-round" style="font-size: 14px;">check_circle</span>
+                                        Ativo
+                                    </span>
+                                    <span th:unless="${usuario.enabled}" class="badge badge-danger">
+                                        <span class="material-icons-round" style="font-size: 14px;">cancel</span>
+                                        Inativo
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <a th:href="@{/usuarios/editar/{id}(id=${usuario.id})}" 
+                                           class="btn-icon" title="Editar">
+                                            <span class="material-icons-round">edit</span>
+                                        </a>
+                                        <a th:href="@{/usuarios/alterar-senha/{id}(id=${usuario.id})}" 
+                                           class="btn-icon" title="Alterar Senha">
+                                            <span class="material-icons-round">lock</span>
+                                        </a>
+                                        <a th:href="@{/usuarios/excluir/{id}(id=${usuario.id})}" 
+                                           class="btn-icon btn-icon-danger" 
+                                           title="Excluir"
+                                           onclick="return confirm('Tem certeza que deseja excluir este usuário?')">
+                                            <span class="material-icons-round">delete</span>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.badge-admin {
+    background: #fff3e0;
+    color: #e65100;
+}
+
+.badge-user {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.badge-success {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.badge-danger {
+    background: #ffebee;
+    color: #c62828;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: var(--background-light);
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+}
+
+.btn-icon:hover {
+    background: var(--primary-green);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.btn-icon-danger:hover {
+    background: #c62828;
+    color: white;
+}
+
+.alert {
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+}
+
+.alert-success {
+    background: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #a5d6a7;
+}
+
+.alert-error {
+    background: #ffebee;
+    color: #c62828;
+    border: 1px solid #ef9a9a;
+}
+</style>
+</body>
+</html>
