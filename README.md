@@ -8,7 +8,7 @@ Sistema web desenvolvido com **Spring Boot** para gerenciamento de produtores ru
 - ✅ Registro de atividades (cultivo e criação de animais)
 - ✅ Documentação de visitas técnicas com diagnósticos e recomendações
 - ✅ Interface web moderna e responsiva
-- ✅ Banco de dados PostgreeSQL
+- ✅ Banco de dados SQLite embutido (não requer instalação externa)
 
 ## 🛠️ Tecnologias Utilizadas
 
@@ -16,18 +16,15 @@ Sistema web desenvolvido com **Spring Boot** para gerenciamento de produtores ru
 - **Spring Boot 3.1.4**
 - **Spring Data JPA**
 - **Thymeleaf** (template engine)
-- **PostgreeSQL** (banco de dados)
+- **SQLite** (banco de dados)
 - **Maven** (gerenciamento de dependências)
 - **HTML5 + CSS3**
-- **Docker**
 
 ## 📦 Requisitos
 
 - **Java JDK 17** ou superior
 - **IntelliJ IDEA** (Community ou Ultimate)
 - **Maven** (geralmente já incluído no IntelliJ)
-- **PostgreeSQL**
-- **Docker Desktop (Recomendado)**
 
 ## 🚀 Como Executar no IntelliJ IDEA
 
@@ -65,17 +62,6 @@ Sistema web desenvolvido com **Spring Boot** para gerenciamento de produtores ru
 2. Abra seu navegador e acesse: **http://localhost:8080**
 3. Pronto! O sistema está funcionando
 
-### Executar o Projeto em DOCKER (RECOMENDADO)
-
-- **Baixe o Docker**
-- **Baixe o Git**
-- **Inicie o docker**
-- **Na pasta principal do projeto abra o Terminal**
-- **Use o comando docker compose up --build**
-- **Projeto rodando em localhost:8080**
-
-
-
 ## 📂 Estrutura do Projeto
 
 ```
@@ -110,13 +96,23 @@ produtor-rural-completo/
 └── README.md
 ```
 
+## 🗄️ Banco de Dados
 
+O sistema utiliza **SQLite**, um banco de dados embutido que não requer instalação ou configuração adicional. O arquivo do banco (`produtordb.sqlite`) será criado automaticamente na raiz do projeto na primeira execução.
+
+### Configuração (application.properties)
+
+```properties
+spring.datasource.url=jdbc:sqlite:produtordb.sqlite
+spring.datasource.driver-class-name=org.sqlite.JDBC
+spring.jpa.hibernate.ddl-auto=update
+```
 
 ## 🎨 Interface
 
 O sistema possui uma interface moderna e responsiva com:
 
-- Design gradiente 
+- Design gradiente (roxo/azul)
 - Navegação intuitiva
 - Tabelas estilizadas
 - Formulários organizados
@@ -162,8 +158,19 @@ O sistema possui uma interface moderna e responsiva com:
 - Verifique se o JDK 17 está instalado e configurado
 - Vá em File → Project Structure → Project → SDK
 
+## 📄 Licença
 
+Este projeto é de código aberto e pode ser utilizado livremente para fins educacionais e comerciais.
+
+## 👨‍💻 Suporte
+
+Para dúvidas ou problemas, verifique:
+- Logs no console do IntelliJ
+- Arquivo `application.properties` está correto
+- Todas as dependências foram baixadas pelo Maven
+
+---
 
 **Desenvolvido com ❤️ para facilitar a gestão rural**
 
-- DEVs: Fernando, Breno, Kayque, Yuri Robert, Eduardo, Bruno (5° Periodo IMEPAC)
+- DEVs: Fernando, Breno, Kayque, Yuri Robert, Eduardo, Emanuel (5° Periodo IMEPAC)
