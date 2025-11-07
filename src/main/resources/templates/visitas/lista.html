@@ -1,51 +1,246 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Visitas</title>
+    <title>Visitas Técnicas - Núcleo de Práticas Agrícolas</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <div class="container">
-        <h2>📋 Visitas Registradas</h2>
-        
-        <div style="margin-bottom: 20px;">
-            <a href="/visitas/novo" class="button">➕ Registrar Visita</a>
-            <a href="/" class="button" style="background: #6c757d;">🏠 Voltar ao Início</a>
+<div class="dashboard-layout">
+    <!-- Sidebar (Menu de Navegação Fixo e Global) -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h1>
+                <span class="material-icons-round" style="color: var(--accent-yellow);">agriculture</span>
+                NPA
+            </h1>
         </div>
-        
-        <div th:if="${visitas.isEmpty()}" style="text-align: center; padding: 40px; background: #f8f9fa; border-radius: 8px;">
-            <p style="font-size: 1.2em; color: #666;">Nenhuma visita registrada ainda.</p>
-            <a href="/visitas/novo" class="button" style="margin-top: 15px;">Registrar Primeira Visita</a>
-        </div>
-        
-        <table th:if="${!visitas.isEmpty()}">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Data</th>
-                    <th>Produtor</th>
-                    <th>Diagnóstico</th>
-                    <th>Recomendações</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="v : ${visitas}">
-                    <td th:text="${v.id}"></td>
-                    <td th:text="${#temporals.format(v.dataVisita, 'dd/MM/yyyy')}"></td>
-                    <td th:text="${v.produtor != null ? v.produtor.nome : 'Sem produtor'}"></td>
-                    <td th:text="${v.diagnostico != null && v.diagnostico.length() > 50 ? v.diagnostico.substring(0, 50) + '...' : v.diagnostico}"></td>
-                    <td th:text="${v.recomendacoes != null && v.recomendacoes.length() > 50 ? v.recomendacoes.substring(0, 50) + '...' : v.recomendacoes}"></td>
-                    <td>
-                        <a th:href="@{'/visitas/excluir/' + ${v.id}}" 
-                           onclick="return confirm('Tem certeza que deseja excluir esta visita?')"
-                           title="Excluir">🗑️ Excluir</a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <nav class="sidebar-nav">
+            <ul>
+                <li>
+                    <a href="/">
+                        <span class="material-icons-round">dashboard</span>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="/produtores">
+                        <span class="material-icons-round">group</span>
+                        Produtores
+                    </a>
+                </li>
+                <li>
+                    <a href="/atividades">
+                        <span class="material-icons-round">grass</span>
+                        Atividades
+                    </a>
+                </li>
+                <li>
+                    <a href="/visitas" class="active">
+                        <span class="material-icons-round">assignment</span>
+                        Visitas Técnicas
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </div>
+
+    <!-- Conteúdo Principal -->
+    <div class="main-content">
+        <div class="container">
+            <!-- Cabeçalho da Página -->
+            <div class="page-header">
+                <div>
+                    <div class="breadcrumb">
+                        <a href="/">
+                            <span class="material-icons-round">home</span>
+                            Início
+                        </a>
+                        <span class="material-icons-round">chevron_right</span>
+                        <span>Visitas Técnicas</span>
+                    </div>
+                    <h1>
+                        <span class="material-icons-round" style="color: var(--primary-green);">assignment</span>
+                        Visitas Técnicas Registradas
+                    </h1>
+                </div>
+            </div>
+
+            <!-- Estatísticas (Movidas para o topo, como nos dashboards de referência) -->
+            <div class="stats-grid">
+                <div class="stat-card" style="border-left-color: var(--primary-green);">
+                    <div class="stat-card-header">
+                        <div class="stat-label">Total de Visitas</div>
+                        <span class="material-icons-round stat-icon-small">assignment_turned_in</span>
+                    </div>
+                    <div class="stat-value" th:text="${visitas.size()}">0</div>
+                </div>
+
+                <div class="stat-card" style="border-left-color: var(--info);">
+                    <div class="stat-card-header">
+                        <div class="stat-label">Visitas Recentes (30 Dias)</div>
+                        <span class="material-icons-round stat-icon-small" style="color: var(--info);">today</span>
+                    </div>
+                    <div class="stat-value" id="visitasRecentes">0</div>
+                </div>
+
+                <div class="stat-card" style="border-left-color: var(--secondary-brown);">
+                    <div class="stat-card-header">
+                        <div class="stat-label">Produtores Atendidos</div>
+                        <span class="material-icons-round stat-icon-small" style="color: var(--secondary-brown);">group</span>
+                    </div>
+                    <!-- Placeholder para o número de produtores únicos, que precisaria de lógica no backend -->
+                    <div class="stat-value">N/A</div>
+                </div>
+            </div>
+
+            <!-- Barra de Ações -->
+            <div class="action-bar mt-24">
+                <a href="/visitas/novo" class="btn">
+                    <span class="material-icons-round">add</span>
+                    Registrar Nova Visita
+                </a>
+                <div class="spacer"></div>
+                <div class="stats-badge">
+                    <span class="material-icons-round">event_available</span>
+                    <span>Total: <strong th:text="${visitas.size()}">0</strong> visita(s)</span>
+                </div>
+            </div>
+
+            <!-- Estado Vazio -->
+            <div th:if="${visitas.isEmpty()}" class="empty-state">
+                <div class="empty-icon">
+                    <span class="material-icons-round">assignment_outlined</span>
+                </div>
+                <h3>Nenhuma visita registrada</h3>
+                <p>
+                    Comece documentando a primeira visita técnica realizada aos produtores rurais.
+                    Registre diagnósticos, observações e recomendações especializadas.
+                </p>
+                <a href="/visitas/novo" class="btn btn-lg">
+                    <span class="material-icons-round">add</span>
+                    Registrar Primeira Visita
+                </a>
+            </div>
+
+            <!-- Tabela de Visitas -->
+            <div th:if="${!visitas.isEmpty()}" class="table-container">
+                <table>
+                    <thead>
+                    <tr>
+                        <th style="width: 80px;">ID</th>
+                        <th style="width: 130px;">Data</th>
+                        <th>Produtor</th>
+                        <th style="width: 35%;">Diagnóstico</th>
+                        <th style="width: 35%;">Recomendações</th>
+                        <th style="width: 100px; text-align: center;">Ações</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="v : ${visitas}">
+                        <td>
+                            <strong th:text="'#' + ${v.id}" style="color: var(--text-primary);">#001</strong>
+                        </td>
+                        <td>
+                            <span class="badge badge-info">
+                                <span class="material-icons-round">event</span>
+                                <span th:text="${#temporals.format(v.dataVisita, 'dd/MM/yyyy')}">01/01/2024</span>
+                            </span>
+                        </td>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span class="material-icons-round" style="color: var(--primary-green); font-size: 20px;">person</span>
+                                <strong th:text="${v.produtor != null ? v.produtor.nome : 'Sem produtor'}" style="color: var(--text-primary);">
+                                    Nome do Produtor
+                                </strong>
+                            </div>
+                        </td>
+                        <td>
+                            <div style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                <span th:text="${v.diagnostico != null && v.diagnostico.length() > 80 ? v.diagnostico.substring(0, 80) + '...' : v.diagnostico}"
+                                      style="color: var(--text-secondary); font-size: 14px; line-height: 1.5;">
+                                    Texto do diagnóstico...
+                                </span>
+                            </div>
+                        </td>
+                        <td>
+                            <div style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                <span th:text="${v.recomendacoes != null && v.recomendacoes.length() > 80 ? v.recomendacoes.substring(0, 80) + '...' : v.recomendacoes}"
+                                      style="color: var(--text-secondary); font-size: 14px; line-height: 1.5;">
+                                    Texto das recomendações...
+                                </span>
+                            </div>
+                        </td>
+                        <td style="text-align: center;">
+                            <div class="table-actions">
+                                <a th:href="@{'/visitas/excluir/' + ${v.id}}"
+                                   class="danger"
+                                   onclick="return confirm('Tem certeza que deseja excluir esta visita? Esta ação não poderá ser desfeita.')"
+                                   title="Excluir visita">
+                                    <span class="material-icons-round">delete</span>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Informação Adicional -->
+            <div th:if="${!visitas.isEmpty()}" class="info-box mt-24">
+                <div class="info-box-header">
+                    <span class="material-icons-round">tips_and_updates</span>
+                    <h4>Dica</h4>
+                </div>
+                <p>
+                    As visitas técnicas ficam registradas no histórico de cada produtor.
+                    O diagnóstico e as recomendações são ferramentas essenciais para o
+                    acompanhamento da evolução das propriedades rurais ao longo do tempo.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script para Estatísticas e Animação (Mantido e ajustado para o novo CSS) -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Calcular visitas recentes (últimos 30 dias)
+        const rows = document.querySelectorAll('tbody tr');
+        const hoje = new Date();
+        const trintaDiasAtras = new Date(hoje.setDate(hoje.getDate() - 30));
+        let visitasRecentes = 0;
+
+        rows.forEach(row => {
+            const dataText = row.querySelector('td:nth-child(2) .badge span:last-child');
+            if (dataText) {
+                // Ajuste para garantir que a data seja lida corretamente no formato dd/MM/yyyy
+                const [dia, mes, ano] = dataText.textContent.split('/');
+                const dataVisita = new Date(ano, mes - 1, dia);
+
+                if (dataVisita >= trintaDiasAtras) {
+                    visitasRecentes++;
+                }
+            }
+        });
+
+        const visitasRecentesEl = document.getElementById('visitasRecentes');
+        if (visitasRecentesEl) {
+            visitasRecentesEl.textContent = visitasRecentes;
+        }
+
+        // Animação suave nas linhas da tabela (Removida para evitar duplicação de estilos no novo CSS)
+        // rows.forEach((row, index) => {
+        //     row.style.opacity = '0';
+        //     row.style.transform = 'translateY(10px)';
+        //     setTimeout(() => {
+        //         row.style.transition = 'all 0.3s ease';
+        //         row.style.opacity = '1';
+        //         row.style.transform = 'translateY(0)';
+        //     }, index * 30);
+        // });
+    });
+</script>
 </body>
 </html>

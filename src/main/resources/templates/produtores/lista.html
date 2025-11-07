@@ -1,54 +1,210 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Produtores</title>
+    <title>Produtores Cadastrados - Núcleo de Práticas Agrícolas</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <div class="container">
-        <h2>👨‍🌾 Produtores Cadastrados</h2>
-        
-        <div style="margin-bottom: 20px;">
-            <a href="/produtores/novo" class="button">➕ Novo Produtor</a>
-            <a href="/" class="button" style="background: #6c757d;">🏠 Voltar ao Início</a>
+<div class="dashboard-layout">
+    <!-- Sidebar (Menu de Navegação Fixo e Global) -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h1>
+                <span class="material-icons-round" style="color: var(--accent-yellow);">agriculture</span>
+                NPA
+            </h1>
         </div>
-        
-        <div th:if="${produtores.isEmpty()}" style="text-align: center; padding: 40px; background: #f8f9fa; border-radius: 8px;">
-            <p style="font-size: 1.2em; color: #666;">Nenhum produtor cadastrado ainda.</p>
-            <a href="/produtores/novo" class="button" style="margin-top: 15px;">Cadastrar Primeiro Produtor</a>
-        </div>
-        
-        <table th:if="${!produtores.isEmpty()}">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nome</th>
-                    <th>CPF</th>
-                    <th>Telefone</th>
-                    <th>Localização</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="p : ${produtores}">
-                    <td th:text="${p.id}"></td>
-                    <td th:text="${p.nome}"></td>
-                    <td th:text="${p.cpf}"></td>
-                    <td th:text="${p.telefone ?: '-'}"></td>
-                    <td th:text="${p.localizacao ?: '-'}"></td>
-                    <td>
-                        <a th:href="@{'/produtores/editar/' + ${p.id}}" title="Editar">✏️ Editar</a> |
-                        <a th:href="@{'/produtores/excluir/' + ${p.id}}" 
-                           onclick="return confirm('Tem certeza que deseja excluir este produtor?')" 
-                           title="Excluir">🗑️ Excluir</a> |
-                        <a th:href="@{'/atividades/novo?produtorId=' + ${p.id}}" title="Adicionar Atividade">🌱 Atividade</a> |
-                        <a th:href="@{'/visitas/novo?produtorId=' + ${p.id}}" title="Registrar Visita">📋 Visita</a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <nav class="sidebar-nav">
+            <ul>
+                <li>
+                    <a href="/">
+                        <span class="material-icons-round">dashboard</span>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="/produtores" class="active">
+                        <span class="material-icons-round">group</span>
+                        Produtores
+                    </a>
+                </li>
+                <li>
+                    <a href="/atividades">
+                        <span class="material-icons-round">grass</span>
+                        Atividades
+                    </a>
+                </li>
+                <li>
+                    <a href="/visitas">
+                        <span class="material-icons-round">assignment</span>
+                        Visitas Técnicas
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </div>
+
+    <!-- Conteúdo Principal -->
+    <div class="main-content">
+        <div class="container">
+            <!-- Cabeçalho da Página -->
+            <div class="page-header">
+                <div>
+                    <div class="breadcrumb">
+                        <a href="/">
+                            <span class="material-icons-round">home</span>
+                            Início
+                        </a>
+                        <span class="material-icons-round">chevron_right</span>
+                        <span>Produtores</span>
+                    </div>
+                    <h1>
+                        <span class="material-icons-round" style="color: var(--primary-green);">group</span>
+                        Produtores Cadastrados
+                    </h1>
+                </div>
+            </div>
+
+            <!-- Estatísticas (Cards) -->
+            <div class="stats-grid">
+                <div class="stat-card" style="border-left-color: var(--primary-green);">
+                    <div class="stat-card-header">
+                        <div class="stat-label">Total de Produtores</div>
+                        <span class="material-icons-round stat-icon-small">people</span>
+                    </div>
+                    <div class="stat-value" th:text="${produtores.size()}">0</div>
+                </div>
+
+                <div class="stat-card" style="border-left-color: var(--info);">
+                    <div class="stat-card-header">
+                        <div class="stat-label">Propriedades Cadastradas</div>
+                        <span class="material-icons-round stat-icon-small" style="color: var(--info);">landscape</span>
+                    </div>
+                    <!-- Assumindo que cada produtor tem uma propriedade, o valor é o mesmo do total -->
+                    <div class="stat-value" th:text="${produtores.size()}">0</div>
+                </div>
+
+                <div class="stat-card" style="border-left-color: var(--secondary-brown);">
+                    <div class="stat-card-header">
+                        <div class="stat-label">Área Total (Hectares)</div>
+                        <span class="material-icons-round stat-icon-small" style="color: var(--secondary-brown);">area_chart</span>
+                    </div>
+                    <!-- Placeholder para a soma total, que precisaria de lógica no backend -->
+                    <div class="stat-value">N/A</div>
+                </div>
+            </div>
+
+            <!-- Barra de Ações -->
+            <div class="action-bar mt-24">
+                <a href="/produtores/novo" class="btn">
+                    <span class="material-icons-round">add</span>
+                    Novo Produtor
+                </a>
+                <div class="spacer"></div>
+                <div class="stats-badge">
+                    <span class="material-icons-round">people</span>
+                    <span>Total: <strong th:text="${produtores.size()}">0</strong> produtor(es)</span>
+                </div>
+            </div>
+
+            <!-- Estado Vazio -->
+            <div th:if="${produtores.isEmpty()}" class="empty-state">
+                <div class="empty-icon">
+                    <span class="material-icons-round">people_outline</span>
+                </div>
+                <h3>Nenhum produtor cadastrado</h3>
+                <p>
+                    Comece adicionando o primeiro produtor rural ao sistema para iniciar
+                    a gestão e acompanhamento das atividades agrícolas.
+                </p>
+                <a href="/produtores/novo" class="btn btn-lg">
+                    <span class="material-icons-round">add</span>
+                    Cadastrar Primeiro Produtor
+                </a>
+            </div>
+
+            <!-- Tabela de Produtores -->
+            <div th:if="${!produtores.isEmpty()}" class="table-container">
+                <table>
+                    <thead>
+                    <tr>
+                        <th style="width: 80px;">ID</th>
+                        <th>Nome Completo</th>
+                        <th>CPF</th>
+                        <th>Telefone</th>
+                        <th>Localização</th>
+                        <th style="width: 150px; text-align: center;">Ações</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="p : ${produtores}">
+                        <td>
+                            <strong th:text="'#' + ${p.id}" style="color: var(--text-primary);">#001</strong>
+                        </td>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span class="material-icons-round" style="color: var(--primary-green); font-size: 20px;">person</span>
+                                <strong th:text="${p.nome}">Nome do Produtor</strong>
+                            </div>
+                        </td>
+                        <td th:text="${p.cpf}">000.000.000-00</td>
+                        <td th:text="${p.telefone ?: '—'}">—</td>
+                        <td th:text="${p.localizacao ?: '—'}">—</td>
+                        <td style="text-align: center;">
+                            <div class="table-actions">
+                                <a th:href="@{'/produtores/editar/' + ${p.id}}" title="Editar produtor">
+                                    <span class="material-icons-round">edit</span>
+                                </a>
+                                <a th:href="@{'/atividades/novo?produtorId=' + ${p.id}}" title="Adicionar atividade">
+                                    <span class="material-icons-round">grass</span>
+                                </a>
+                                <a th:href="@{'/visitas/novo?produtorId=' + ${p.id}}" title="Registrar visita">
+                                    <span class="material-icons-round">assignment</span>
+                                </a>
+                                <a th:href="@{'/produtores/excluir/' + ${p.id}}"
+                                   class="danger"
+                                   onclick="return confirm('Tem certeza que deseja excluir este produtor? Esta ação não poderá ser desfeita.')"
+                                   title="Excluir produtor">
+                                    <span class="material-icons-round">delete</span>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Informação Adicional -->
+            <div th:if="${!produtores.isEmpty()}" class="info-box mt-24">
+                <div class="info-box-header">
+                    <span class="material-icons-round">tips_and_updates</span>
+                    <h4>Dica</h4>
+                </div>
+                <p>
+                    Use os ícones de ação rápida na coluna "Ações" para editar, adicionar atividades ou registrar visitas técnicas diretamente para cada produtor.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script para Animações (Removido) -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animação suave nas linhas da tabela (Removida para evitar duplicação de estilos no novo CSS)
+        // const rows = document.querySelectorAll('tbody tr');
+        // rows.forEach((row, index) => {
+        //     row.style.opacity = '0';
+        //     row.style.transform = 'translateY(10px)';
+        //     setTimeout(() => {
+        //         row.style.transition = 'all 0.3s ease';
+        //         row.style.opacity = '1';
+        //         row.style.transform = 'translateY(0)';
+        //     }, index * 30);
+        // });
+    });
+</script>
 </body>
 </html>

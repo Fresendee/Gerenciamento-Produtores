@@ -1,50 +1,174 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema Produtor Rural</title>
+    <title>Dashboard - Núcleo de Práticas Agrícolas</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
-<body class="fullscreen">
-    <div class="container">
-        <h1>🌾 Sistema de Gestão de Produtores Rurais</h1>
-        
-        <nav>
-            <a href="/produtores">👨‍🌾 Produtores</a>
-            <a href="/atividades">🌱 Atividades</a>
-            <a href="/visitas">📋 Visitas</a>
+<body>
+<div class="dashboard-layout">
+    <!-- Sidebar (Menu de Navegação Fixo e Global) -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h1>
+                <span class="material-icons-round" style="color: var(--accent-yellow);">agriculture</span>
+                NPA
+            </h1>
+        </div>
+        <nav class="sidebar-nav">
+            <ul>
+                <li>
+                    <a href="/" class="active">
+                        <span class="material-icons-round">dashboard</span>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="/produtores">
+                        <span class="material-icons-round">group</span>
+                        Produtores
+                    </a>
+                </li>
+                <li>
+                    <a href="/atividades">
+                        <span class="material-icons-round">grass</span>
+                        Atividades
+                    </a>
+                </li>
+                <li>
+                    <a href="/visitas">
+                        <span class="material-icons-round">assignment</span>
+                        Visitas Técnicas
+                    </a>
+                </li>
+                <!-- Adicionar mais links de navegação aqui conforme necessário -->
+            </ul>
         </nav>
-        
-        <hr/>
-        
-        <div style="text-align: center; padding: 40px 20px;">
-            <h2 style="border: none; color: #667eea;">Bem-vindo ao Sistema de Consultoria Rural</h2>
-            <p style="font-size: 1.1em; color: #666; max-width: 800px; margin: 20px auto;">
-                Este sistema foi desenvolvido para facilitar o cadastro e acompanhamento de produtores rurais,
-                suas atividades agrícolas e pecuárias, além do registro de visitas técnicas e consultorias.
-            </p>
-            
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 40px;">
-                <div style="background: #f8f9fa; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                    <h3 style="color: #667eea; margin-bottom: 15px;">👨‍🌾 Produtores</h3>
-                    <p>Cadastre e gerencie informações completas dos produtores rurais, incluindo dados pessoais e da propriedade.</p>
-                    <a href="/produtores" class="button" style="margin-top: 15px;">Acessar</a>
+    </div>
+
+    <!-- Conteúdo Principal -->
+    <div class="main-content">
+        <div class="container">
+            <!-- Cabeçalho da Página -->
+            <div class="page-header">
+                <div>
+                    <h1>Dashboard Principal</h1>
+                    <p style="color: var(--text-secondary); font-size: 16px;">
+                        Visão geral e acesso rápido aos módulos do sistema.
+                    </p>
                 </div>
-                
-                <div style="background: #f8f9fa; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                    <h3 style="color: #667eea; margin-bottom: 15px;">🌱 Atividades</h3>
-                    <p>Registre as atividades de cultivo e criação de animais desenvolvidas pelos produtores.</p>
-                    <a href="/atividades" class="button" style="margin-top: 15px;">Acessar</a>
+            </div>
+
+            <!-- Grid de Módulos (Cards) -->
+            <div class="card-grid">
+                <!-- Card Produtores -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <span class="material-icons-round">group</span>
+                        </div>
+                        <h3 class="card-title">Gestão de Produtores</h3>
+                    </div>
+                    <div class="card-content">
+                        Cadastro e gerenciamento completo de produtores rurais, incluindo dados pessoais,
+                        informações da propriedade, localização geográfica e composição familiar.
+                    </div>
+                    <a href="/produtores" class="btn btn-outline">
+                        <span class="material-icons-round">arrow_forward</span>
+                        Acessar Módulo
+                    </a>
                 </div>
-                
-                <div style="background: #f8f9fa; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                    <h3 style="color: #667eea; margin-bottom: 15px;">📋 Visitas</h3>
-                    <p>Documente visitas técnicas com diagnósticos e recomendações para cada produtor.</p>
-                    <a href="/visitas" class="button" style="margin-top: 15px;">Acessar</a>
+
+                <!-- Card Atividades -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background: var(--accent-yellow);">
+                            <span class="material-icons-round">grass</span>
+                        </div>
+                        <h3 class="card-title">Atividades Agrícolas</h3>
+                    </div>
+                    <div class="card-content">
+                        Registro e acompanhamento de todas as atividades de cultivo agrícola e criação
+                        pecuária desenvolvidas nas propriedades rurais cadastradas.
+                    </div>
+                    <a href="/atividades" class="btn btn-outline">
+                        <span class="material-icons-round">arrow_forward</span>
+                        Acessar Módulo
+                    </a>
+                </div>
+
+                <!-- Card Visitas -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon" style="background: var(--secondary-brown);">
+                            <span class="material-icons-round">assignment</span>
+                        </div>
+                        <h3 class="card-title">Visitas Técnicas</h3>
+                    </div>
+                    <div class="card-content">
+                        Documentação detalhada de visitas técnicas com diagnósticos, observações de campo
+                        e recomendações especializadas para cada produtor.
+                    </div>
+                    <a href="/visitas" class="btn btn-outline">
+                        <span class="material-icons-round">arrow_forward</span>
+                        Acessar Módulo
+                    </a>
+                </div>
+            </div>
+
+            <!-- Seção de Recursos (Mantida e estilizada pelo novo CSS) -->
+            <div class="info-box mt-24">
+                <div class="info-box-header">
+                    <span class="material-icons-round">info</span>
+                    <h4>Sobre o Sistema</h4>
+                </div>
+                <p style="margin-bottom: 16px;">
+                    O <strong>Núcleo de Práticas Agrícolas</strong> é uma solução completa para gestão de
+                    assistência técnica rural, desenvolvida para otimizar o trabalho de consultoria e
+                    acompanhamento de produtores rurais.
+                </p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-top: 20px;">
+                    <div style="display: flex; align-items: start; gap: 12px;">
+                        <span class="material-icons-round" style="color: var(--primary-green);">check_circle</span>
+                        <div>
+                            <strong style="display: block; color: var(--text-primary); margin-bottom: 4px;">Centralização de Dados</strong>
+                            <span style="color: var(--text-secondary); font-size: 14px;">
+                                Todas as informações organizadas em um único sistema
+                            </span>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: start; gap: 12px;">
+                        <span class="material-icons-round" style="color: var(--primary-green);">check_circle</span>
+                        <div>
+                            <strong style="display: block; color: var(--text-primary); margin-bottom: 4px;">Acompanhamento Completo</strong>
+                            <span style="color: var(--text-secondary); font-size: 14px;">
+                                Histórico detalhado de atividades e visitas técnicas
+                            </span>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: start; gap: 12px;">
+                        <span class="material-icons-round" style="color: var(--primary-green);">check_circle</span>
+                        <div>
+                            <strong style="display: block; color: var(--text-primary); margin-bottom: 4px;">Gestão Eficiente</strong>
+                            <span style="color: var(--text-secondary); font-size: 14px;">
+                                Ferramentas para tomada de decisão baseada em dados
+                            </span>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: start; gap: 12px;">
+                        <span class="material-icons-round" style="color: var(--primary-green);">check_circle</span>
+                        <div>
+                            <strong style="display: block; color: var(--text-primary); margin-bottom: 4px;">Relatórios e Análises</strong>
+                            <span style="color: var(--text-secondary); font-size: 14px;">
+                                Geração de insights para planejamento estratégico
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </body>
 </html>

@@ -1,49 +1,290 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Atividades</title>
+    <title>Atividades Cadastradas - Núcleo de Práticas Agrícolas</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <div class="container">
-        <h2>🌱 Atividades Cadastradas</h2>
-        
-        <div style="margin-bottom: 20px;">
-            <a href="/atividades/novo" class="button">➕ Nova Atividade</a>
-            <a href="/" class="button" style="background: #6c757d;">🏠 Voltar ao Início</a>
+<div class="dashboard-layout">
+    <!-- Sidebar (Menu de Navegação Fixo e Global) -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h1>
+                <span class="material-icons-round" style="color: var(--accent-yellow);">agriculture</span>
+                NPA
+            </h1>
         </div>
-        
-        <div th:if="${atividades.isEmpty()}" style="text-align: center; padding: 40px; background: #f8f9fa; border-radius: 8px;">
-            <p style="font-size: 1.2em; color: #666;">Nenhuma atividade cadastrada ainda.</p>
-            <a href="/atividades/novo" class="button" style="margin-top: 15px;">Cadastrar Primeira Atividade</a>
-        </div>
-        
-        <table th:if="${!atividades.isEmpty()}">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Tipo</th>
-                    <th>Descrição</th>
-                    <th>Produtor</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="a : ${atividades}">
-                    <td th:text="${a.id}"></td>
-                    <td th:text="${a.tipo}"></td>
-                    <td th:text="${a.descricao}"></td>
-                    <td th:text="${a.produtor != null ? a.produtor.nome : 'Sem produtor'}"></td>
-                    <td>
-                        <a th:href="@{'/atividades/excluir/' + ${a.id}}" 
-                           onclick="return confirm('Tem certeza que deseja excluir esta atividade?')"
-                           title="Excluir">🗑️ Excluir</a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <nav class="sidebar-nav">
+            <ul>
+                <li>
+                    <a href="/">
+                        <span class="material-icons-round">dashboard</span>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="/produtores">
+                        <span class="material-icons-round">group</span>
+                        Produtores
+                    </a>
+                </li>
+                <li>
+                    <a href="/atividades" class="active">
+                        <span class="material-icons-round">grass</span>
+                        Atividades
+                    </a>
+                </li>
+                <li>
+                    <a href="/visitas">
+                        <span class="material-icons-round">assignment</span>
+                        Visitas Técnicas
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </div>
+
+    <!-- Conteúdo Principal -->
+    <div class="main-content">
+        <div class="container">
+            <!-- Cabeçalho da Página -->
+            <div class="page-header">
+                <div>
+                    <div class="breadcrumb">
+                        <a href="/">
+                            <span class="material-icons-round">home</span>
+                            Início
+                        </a>
+                        <span class="material-icons-round">chevron_right</span>
+                        <span>Atividades</span>
+                    </div>
+                    <h1>
+                        <span class="material-icons-round" style="color: var(--primary-green);">grass</span>
+                        Atividades Agrícolas
+                    </h1>
+                </div>
+            </div>
+
+            <!-- Estatísticas (Cards) -->
+            <div class="stats-grid">
+                <div class="stat-card" style="border-left-color: var(--primary-green);">
+                    <div class="stat-card-header">
+                        <div class="stat-label">Total de Atividades</div>
+                        <span class="material-icons-round stat-icon-small">analytics</span>
+                    </div>
+                    <div class="stat-value" th:text="${atividades.size()}">0</div>
+                </div>
+
+                <div class="stat-card" style="border-left-color: var(--success);">
+                    <div class="stat-card-header">
+                        <div class="stat-label">Atividades de Cultivo</div>
+                        <span class="material-icons-round stat-icon-small" style="color: var(--success);">agriculture</span>
+                    </div>
+                    <div class="stat-value" id="countCultivo">0</div>
+                </div>
+
+                <div class="stat-card" style="border-left-color: var(--secondary-brown);">
+                    <div class="stat-card-header">
+                        <div class="stat-label">Atividades com Animais</div>
+                        <span class="material-icons-round stat-icon-small" style="color: var(--secondary-brown);">pets</span>
+                    </div>
+                    <div class="stat-value" id="countAnimal">0</div>
+                </div>
+            </div>
+
+            <!-- Barra de Ações -->
+            <div class="action-bar mt-24">
+                <a href="/atividades/novo" class="btn">
+                    <span class="material-icons-round">add</span>
+                    Nova Atividade
+                </a>
+                <div class="spacer"></div>
+                <div class="stats-badge">
+                    <span class="material-icons-round">analytics</span>
+                    <span>Total: <strong th:text="${atividades.size()}">0</strong> atividade(s)</span>
+                </div>
+            </div>
+
+            <!-- Filtros (Integrado ao novo design) -->
+            <div th:if="${!atividades.isEmpty()}" class="action-bar" style="margin-bottom: 24px; justify-content: flex-start; gap: 16px;">
+                <strong style="color: var(--text-primary); font-weight: 600;">
+                    <span class="material-icons-round" style="vertical-align: middle; font-size: 20px;">filter_list</span>
+                    Filtrar por tipo:
+                </strong>
+                <button onclick="filtrarTipo('todos')" class="btn btn-sm btn-outline" id="btnTodos" style="border-color: var(--text-secondary); color: var(--text-secondary);">
+                    Todos
+                </button>
+                <button onclick="filtrarTipo('Cultivo')" class="btn btn-sm btn-outline" id="btnCultivo" style="border-color: var(--success); color: var(--success);">
+                    <span class="material-icons-round">agriculture</span>
+                    Cultivo
+                </button>
+                <button onclick="filtrarTipo('Animal')" class="btn btn-sm btn-outline" id="btnAnimal" style="border-color: var(--secondary-brown); color: var(--secondary-brown);">
+                    <span class="material-icons-round">pets</span>
+                    Animal
+                </button>
+            </div>
+
+            <!-- Estado Vazio -->
+            <div th:if="${atividades.isEmpty()}" class="empty-state">
+                <div class="empty-icon">
+                    <span class="material-icons-round">grass</span>
+                </div>
+                <h3>Nenhuma atividade cadastrada</h3>
+                <p>
+                    Adicione a primeira atividade agrícola ou pecuária para começar o
+                    acompanhamento das práticas rurais desenvolvidas pelos produtores.
+                </p>
+                <a href="/atividades/novo" class="btn btn-lg">
+                    <span class="material-icons-round">add</span>
+                    Cadastrar Primeira Atividade
+                </a>
+            </div>
+
+            <!-- Tabela de Atividades -->
+            <div th:if="${!atividades.isEmpty()}" class="table-container">
+                <table id="tabelaAtividades">
+                    <thead>
+                    <tr>
+                        <th style="width: 80px;">ID</th>
+                        <th style="width: 150px;">Tipo</th>
+                        <th>Descrição</th>
+                        <th>Produtor Responsável</th>
+                        <th style="width: 100px; text-align: center;">Ações</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="a : ${atividades}" th:attr="data-tipo=${a.tipo}">
+                        <td>
+                            <strong th:text="'#' + ${a.id}" style="color: var(--text-primary);">#001</strong>
+                        </td>
+                        <td>
+                            <span th:if="${a.tipo == 'Cultivo'}" class="badge badge-success">
+                                <span class="material-icons-round">agriculture</span>
+                                Cultivo
+                            </span>
+                            <span th:if="${a.tipo == 'Animal'}" class="badge" style="background: #fbe9e7; color: var(--secondary-brown);">
+                                <span class="material-icons-round">pets</span>
+                                Animal
+                            </span>
+                        </td>
+                        <td>
+                            <strong th:text="${a.descricao}">Descrição da Atividade</strong>
+                        </td>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span class="material-icons-round" style="color: var(--primary-green); font-size: 20px;">person</span>
+                                <span th:if="${a.produtor != null}" th:text="${a.produtor.nome}" style="color: var(--text-primary);">
+                                    Nome do Produtor
+                                </span>
+                                <span th:if="${a.produtor == null}" style="color: var(--text-secondary); font-style: italic;">
+                                    Sem produtor vinculado
+                                </span>
+                            </div>
+                        </td>
+                        <td style="text-align: center;">
+                            <div class="table-actions">
+                                <a th:href="@{'/atividades/excluir/' + ${a.id}}"
+                                   class="danger"
+                                   onclick="return confirm('Tem certeza que deseja excluir esta atividade? Esta ação não poderá ser desfeita.')"
+                                   title="Excluir atividade">
+                                    <span class="material-icons-round">delete</span>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Informação Adicional -->
+            <div th:if="${!atividades.isEmpty()}" class="info-box mt-24">
+                <div class="info-box-header">
+                    <span class="material-icons-round">tips_and_updates</span>
+                    <h4>Dica</h4>
+                </div>
+                <p>
+                    As atividades estão vinculadas aos produtores cadastrados. Para editar uma atividade,
+                    você pode excluí-la e cadastrar novamente com as informações atualizadas. Use os filtros
+                    acima para visualizar apenas cultivo ou criação animal.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script para Filtros e Estatísticas -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Calcular estatísticas
+        const rows = document.querySelectorAll('#tabelaAtividades tbody tr');
+        let countCultivo = 0;
+        let countAnimal = 0;
+
+        rows.forEach(row => {
+            const tipo = row.getAttribute('data-tipo');
+            if (tipo === 'Cultivo') countCultivo++;
+            if (tipo === 'Animal') countAnimal++;
+        });
+
+        const countCultivoEl = document.getElementById('countCultivo');
+        const countAnimalEl = document.getElementById('countAnimal');
+
+        if (countCultivoEl) countCultivoEl.textContent = countCultivo;
+        if (countAnimalEl) countAnimalEl.textContent = countAnimal;
+
+        // Função de filtro
+        window.filtrarTipo = function(tipo) {
+            const rows = document.querySelectorAll('#tabelaAtividades tbody tr');
+            const btnTodos = document.getElementById('btnTodos');
+            const btnCultivo = document.getElementById('btnCultivo');
+            const btnAnimal = document.getElementById('btnAnimal');
+
+            // Reset estilos dos botões
+            [btnTodos, btnCultivo, btnAnimal].forEach(btn => {
+                if (btn) {
+                    btn.classList.remove('btn');
+                    btn.classList.add('btn-outline');
+                    btn.style.opacity = '1';
+                }
+            });
+
+            // Destacar botão ativo
+            if (tipo === 'todos' && btnTodos) {
+                btnTodos.classList.remove('btn-outline');
+                btnTodos.classList.add('btn');
+                btnTodos.style.backgroundColor = 'var(--text-secondary)';
+                btnTodos.style.color = 'var(--text-light)';
+                btnTodos.style.borderColor = 'var(--text-secondary)';
+            } else if (tipo === 'Cultivo' && btnCultivo) {
+                btnCultivo.classList.remove('btn-outline');
+                btnCultivo.classList.add('btn');
+                btnCultivo.style.backgroundColor = 'var(--success)';
+                btnCultivo.style.color = 'var(--text-light)';
+                btnCultivo.style.borderColor = 'var(--success)';
+            } else if (tipo === 'Animal' && btnAnimal) {
+                btnAnimal.classList.remove('btn-outline');
+                btnAnimal.classList.add('btn');
+                btnAnimal.style.backgroundColor = 'var(--secondary-brown)';
+                btnAnimal.style.color = 'var(--text-light)';
+                btnAnimal.style.borderColor = 'var(--secondary-brown)';
+            }
+
+            // Filtrar linhas
+            rows.forEach(row => {
+                if (tipo === 'todos') {
+                    row.style.display = '';
+                } else {
+                    const rowTipo = row.getAttribute('data-tipo');
+                    row.style.display = rowTipo === tipo ? '' : 'none';
+                }
+            });
+        }
+
+        // Inicializar o filtro para "Todos"
+        filtrarTipo('todos');
+    });
+</script>
 </body>
 </html>

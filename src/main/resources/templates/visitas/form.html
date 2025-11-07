@@ -1,46 +1,363 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registrar Visita</title>
+    <title>Registrar Visita Técnica - Núcleo de Práticas Agrícolas</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <div class="container">
-        <h2>📋 Registrar Visita Técnica</h2>
-        
-        <form th:action="@{/visitas/salvar}" th:object="${visita}" method="post">
-            <input type="hidden" th:field="*{id}"/>
-            
-            <label>
-                Data da Visita: <span style="color: red;">*</span>
-                <input type="date" th:field="*{dataVisita}" required/>
-            </label>
-            
-            <label>
-                Produtor: <span style="color: red;">*</span>
-                <select th:field="*{produtor.id}" required>
-                    <option value="">Selecione o produtor</option>
-                    <option th:each="p : ${produtores}" th:value="${p.id}" th:text="${p.nome}"></option>
-                </select>
-            </label>
-            
-            <label>
-                Diagnóstico: <span style="color: red;">*</span>
-                <textarea th:field="*{diagnostico}" required placeholder="Descreva o diagnóstico da propriedade..."></textarea>
-            </label>
-            
-            <label>
-                Recomendações: <span style="color: red;">*</span>
-                <textarea th:field="*{recomendacoes}" required placeholder="Descreva as recomendações técnicas..."></textarea>
-            </label>
-            
-            <div style="margin-top: 25px; text-align: center;">
-                <button type="submit">💾 Salvar</button>
-                <a href="/visitas" class="button" style="background: #6c757d;">❌ Cancelar</a>
-            </div>
-        </form>
+<div class="dashboard-layout">
+    <!-- Sidebar (Menu de Navegação Fixo e Global) -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h1>
+                <span class="material-icons-round" style="color: var(--accent-yellow);">agriculture</span>
+                NPA
+            </h1>
+        </div>
+        <nav class="sidebar-nav">
+            <ul>
+                <li>
+                    <a href="/">
+                        <span class="material-icons-round">dashboard</span>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="/produtores">
+                        <span class="material-icons-round">group</span>
+                        Produtores
+                    </a>
+                </li>
+                <li>
+                    <a href="/atividades">
+                        <span class="material-icons-round">grass</span>
+                        Atividades
+                    </a>
+                </li>
+                <li>
+                    <a href="/visitas" class="active">
+                        <span class="material-icons-round">assignment</span>
+                        Visitas Técnicas
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </div>
+
+    <!-- Conteúdo Principal -->
+    <div class="main-content">
+        <div class="container">
+            <!-- Cabeçalho da Página -->
+            <div class="page-header">
+                <div>
+                    <div class="breadcrumb">
+                        <a href="/">
+                            <span class="material-icons-round">home</span>
+                            Início
+                        </a>
+                        <span class="material-icons-round">chevron_right</span>
+                        <a href="/visitas">Visitas Técnicas</a>
+                        <span class="material-icons-round">chevron_right</span>
+                        <span>Registrar</span>
+                    </div>
+                    <h1>
+                        <span class="material-icons-round" style="color: var(--primary-green);">post_add</span>
+                        Registrar Visita Técnica
+                    </h1>
+                </div>
+            </div>
+
+            <!-- Barra de Ações -->
+            <div class="action-bar">
+                <a href="/visitas" class="btn btn-secondary">
+                    <span class="material-icons-round">arrow_back</span>
+                    Voltar para Lista
+                </a>
+            </div>
+
+            <!-- Card Informativo -->
+            <div class="info-box">
+                <div class="info-box-header">
+                    <span class="material-icons-round">info</span>
+                    <h4>Informações sobre Visitas Técnicas</h4>
+                </div>
+                <p>
+                    Registre todas as informações relevantes da visita técnica realizada.
+                    O diagnóstico deve conter as observações sobre a propriedade, culturas,
+                    criações e condições gerais. As recomendações devem incluir orientações
+                    técnicas, sugestões de melhorias e próximos passos.
+                </p>
+            </div>
+
+            <!-- Formulário -->
+            <form th:action="@{/visitas/salvar}" th:object="${visita}" method="post" id="formVisita">
+                <input type="hidden" th:field="*{id}"/>
+
+                <!-- Seção: Informações Básicas -->
+                <div class="form-section">
+                    <div class="form-section-header">
+                        <span class="material-icons-round">event</span>
+                        <h3>Informações da Visita</h3>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>
+                                Data da Visita
+                                <span class="required">*</span>
+                            </label>
+                            <input type="date"
+                                   th:field="*{dataVisita}"
+                                   required
+                                   id="dataVisita"/>
+                            <span class="helper-text">Data em que a visita técnica foi realizada</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label>
+                                Produtor Visitado
+                                <span class="required">*</span>
+                            </label>
+                            <select th:field="*{produtor.id}" required id="produtorSelect">
+                                <option value="">Selecione o produtor</option>
+                                <option th:each="p : ${produtores}"
+                                        th:value="${p.id}"
+                                        th:text="${p.nome + ' - ' + (p.localizacao ?: 'Localização não informada')}">
+                                </option>
+                            </select>
+                            <span class="helper-text">Produtor rural que recebeu a visita técnica</span>
+                        </div>
+                    </div>
+
+                    <!-- Alerta: Sem Produtores -->
+                    <div th:if="${produtores.isEmpty()}" class="alert alert-error mt-24">
+                        <span class="material-icons-round">warning</span>
+                        <div>
+                            <strong>Atenção:</strong> Não há produtores cadastrados no sistema.
+                            <a href="/produtores/novo" style="color: var(--error); font-weight: 600; text-decoration: underline;">
+                                Cadastre um produtor primeiro
+                            </a> para poder registrar visitas técnicas.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seção: Diagnóstico -->
+                <div class="form-section">
+                    <div class="form-section-header">
+                        <span class="material-icons-round">search</span>
+                        <h3>Diagnóstico da Propriedade</h3>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>
+                                Diagnóstico Técnico
+                                <span class="required">*</span>
+                            </label>
+                            <textarea th:field="*{diagnostico}"
+                                      required
+                                      placeholder="Descreva as observações realizadas durante a visita: condições das culturas, estado das pastagens, infraestrutura, manejo adotado, problemas identificados, pontos fortes observados..."
+                                      rows="6"
+                                      id="diagnostico"></textarea>
+                            <span class="helper-text">
+                                Documente todas as observações relevantes sobre a propriedade,
+                                culturas, criações e práticas adotadas
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Dicas para Diagnóstico -->
+                    <div class="info-box" style="border-left-color: var(--info); margin-top: 16px;">
+                        <div style="display: flex; align-items: start; gap: 12px; margin-bottom: 12px;">
+                            <span class="material-icons-round" style="color: var(--info);">lightbulb</span>
+                            <strong style="color: var(--text-primary);">O que incluir no diagnóstico:</strong>
+                        </div>
+                        <ul style="margin-left: 36px; color: var(--text-secondary); line-height: 1.8; font-size: 13px;">
+                            <li>Estado geral das culturas ou criações</li>
+                            <li>Condições de solo, água e infraestrutura</li>
+                            <li>Práticas de manejo observadas</li>
+                            <li>Problemas fitossanitários ou zootécnicos identificados</li>
+                            <li>Uso de insumos e tecnologias</li>
+                            <li>Aspectos ambientais e de sustentabilidade</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Seção: Recomendações -->
+                <div class="form-section">
+                    <div class="form-section-header">
+                        <span class="material-icons-round">check_circle</span>
+                        <h3>Recomendações Técnicas</h3>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>
+                                Recomendações e Orientações
+                                <span class="required">*</span>
+                            </label>
+                            <textarea th:field="*{recomendacoes}"
+                                      required
+                                      placeholder="Liste as recomendações técnicas, sugestões de melhorias, orientações sobre manejo, indicações de práticas adequadas, ações corretivas necessárias, próximos passos..."
+                                      rows="6"
+                                      id="recomendacoes"></textarea>
+                            <span class="helper-text">
+                                Forneça orientações técnicas detalhadas e ações recomendadas
+                                para melhoria da produção
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Dicas para Recomendações -->
+                    <div class="info-box" style="border-left-color: var(--success); margin-top: 16px;">
+                        <div style="display: flex; align-items: start; gap: 12px; margin-bottom: 12px;">
+                            <span class="material-icons-round" style="color: var(--success);">lightbulb</span>
+                            <strong style="color: var(--text-primary);">O que incluir nas recomendações:</strong>
+                        </div>
+                        <ul style="margin-left: 36px; color: var(--text-secondary); line-height: 1.8; font-size: 13px;">
+                            <li>Correções necessárias (solo, nutrição, manejo)</li>
+                            <li>Melhorias em infraestrutura ou equipamentos</li>
+                            <li>Orientações sobre controle de pragas e doenças</li>
+                            <li>Sugestões de práticas sustentáveis</li>
+                            <li>Capacitações ou treinamentos recomendados</li>
+                            <li>Cronograma de acompanhamento e próximas visitas</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Contador de Caracteres -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
+                    <div style="padding: 12px; background: var(--bg-white); border-radius: 8px; text-align: center; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
+                        <span style="font-size: 24px; font-weight: 600; color: var(--info);" id="countDiagnostico">0</span>
+                        <span style="display: block; font-size: 12px; color: var(--text-secondary); margin-top: 4px;">caracteres no diagnóstico</span>
+                    </div>
+                    <div style="padding: 12px; background: var(--bg-white); border-radius: 8px; text-align: center; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
+                        <span style="font-size: 24px; font-weight: 600; color: var(--success);" id="countRecomendacoes">0</span>
+                        <span style="display: block; font-size: 12px; color: var(--text-secondary); margin-top: 4px;">caracteres nas recomendações</span>
+                    </div>
+                </div>
+
+                <!-- Alerta de Campos Obrigatórios -->
+                <div class="alert alert-warning">
+                    <span class="material-icons-round">info</span>
+                    <span>Todos os campos marcados com <strong>*</strong> são obrigatórios</span>
+                </div>
+
+                <!-- Botões de Ação -->
+                <div class="action-bar" style="justify-content: center; margin-top: 32px;">
+                    <button type="submit" class="btn btn-lg" id="btnSalvar">
+                        <span class="material-icons-round">save</span>
+                        Salvar Visita
+                    </button>
+                    <a href="/visitas" class="btn btn-secondary btn-lg">
+                        <span class="material-icons-round">close</span>
+                        Cancelar
+                    </a>
+                </div>
+            </form>
+
+            <!-- Informações Adicionais -->
+            <div class="info-box mt-24">
+                <div class="info-box-header">
+                    <span class="material-icons-round">task_alt</span>
+                    <h4>Importância do Registro de Visitas</h4>
+                </div>
+                <p style="margin-bottom: 16px;">
+                    O registro detalhado de visitas técnicas é fundamental para:
+                </p>
+                <ul style="margin-left: 24px; color: var(--text-secondary); line-height: 1.8; font-size: 14px;">
+                    <li>Manter histórico completo do acompanhamento de cada propriedade</li>
+                    <li>Avaliar a evolução das práticas agrícolas ao longo do tempo</li>
+                    <li>Documentar recomendações técnicas e verificar sua implementação</li>
+                    <li>Gerar relatórios para análise e tomada de decisão</li>
+                    <li>Comprovar a assistência técnica prestada</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script para Interatividade (Mantido) -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const diagnosticoTextarea = document.getElementById('diagnostico');
+        const recomendacoesTextarea = document.getElementById('recomendacoes');
+        const countDiagnostico = document.getElementById('countDiagnostico');
+        const countRecomendacoes = document.getElementById('countRecomendacoes');
+        const dataVisitaInput = document.getElementById('dataVisita');
+
+        // Definir data máxima como hoje
+        if (dataVisitaInput) {
+            const hoje = new Date().toISOString().split('T')[0];
+            dataVisitaInput.setAttribute('max', hoje);
+        }
+
+        // Contador de caracteres para diagnóstico
+        if (diagnosticoTextarea && countDiagnostico) {
+            diagnosticoTextarea.addEventListener('input', function() {
+                countDiagnostico.textContent = this.value.length;
+            });
+            // Inicializar contador
+            countDiagnostico.textContent = diagnosticoTextarea.value.length;
+        }
+
+        // Contador de caracteres para recomendações
+        if (recomendacoesTextarea && countRecomendacoes) {
+            recomendacoesTextarea.addEventListener('input', function() {
+                countRecomendacoes.textContent = this.value.length;
+            });
+            // Inicializar contador
+            countRecomendacoes.textContent = recomendacoesTextarea.value.length;
+        }
+
+        // Validação do formulário
+        const form = document.getElementById('formVisita');
+        form.addEventListener('submit', function(e) {
+            const dataVisita = dataVisitaInput.value;
+            const produtor = document.getElementById('produtorSelect').value;
+            const diagnostico = diagnosticoTextarea.value.trim();
+            const recomendacoes = recomendacoesTextarea.value.trim();
+
+            if (!dataVisita || !produtor || !diagnostico || !recomendacoes) {
+                e.preventDefault();
+                alert('Por favor, preencha todos os campos obrigatórios antes de salvar.');
+                return false;
+            }
+
+            if (diagnostico.length < 20) {
+                e.preventDefault();
+                alert('O diagnóstico deve ter pelo menos 20 caracteres para ser mais descritivo.');
+                diagnosticoTextarea.focus();
+                return false;
+            }
+
+            if (recomendacoes.length < 20) {
+                e.preventDefault();
+                alert('As recomendações devem ter pelo menos 20 caracteres para serem mais descritivas.');
+                recomendacoesTextarea.focus();
+                return false;
+            }
+
+            // Feedback visual
+            const btnSalvar = document.getElementById('btnSalvar');
+            btnSalvar.innerHTML = '<span class="material-icons-round">hourglass_empty</span> Salvando...';
+            btnSalvar.disabled = true;
+        });
+
+        // Animação suave nos campos (Removida para evitar duplicação de estilos no novo CSS)
+        // const campos = document.querySelectorAll('input, select, textarea');
+        // campos.forEach((campo, index) => {
+        //     campo.style.opacity = '0';
+        //     campo.style.transform = 'translateY(10px)';
+        //     setTimeout(() => {
+        //         campo.style.transition = 'all 0.3s ease';
+        //         campo.style.opacity = '1';
+        //         campo.style.transform = 'translateY(0)';
+        //     }, index * 20);
+        // });
+    });
+</script>
 </body>
 </html>

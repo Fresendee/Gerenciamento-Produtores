@@ -1,45 +1,319 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro de Atividade</title>
+    <title>Cadastro de Atividade - Núcleo de Práticas Agrícolas</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <div class="container">
-        <h2>🌱 Nova Atividade</h2>
-        
-        <form th:action="@{/atividades/salvar}" th:object="${atividade}" method="post">
-            <input type="hidden" th:field="*{id}"/>
-            
-            <label>
-                Tipo de Atividade: <span style="color: red;">*</span>
-                <select th:field="*{tipo}" required>
-                    <option value="">Selecione o tipo</option>
-                    <option value="Cultivo">🌾 Cultivo</option>
-                    <option value="Animal">🐄 Animal</option>
-                </select>
-            </label>
-            
-            <label>
-                Descrição: <span style="color: red;">*</span>
-                <input type="text" th:field="*{descricao}" required placeholder="Ex: Soja, Milho, Bovinos, etc."/>
-            </label>
-            
-            <label>
-                Produtor: <span style="color: red;">*</span>
-                <select th:field="*{produtor.id}" required>
-                    <option value="">Selecione o produtor</option>
-                    <option th:each="p : ${produtores}" th:value="${p.id}" th:text="${p.nome}"></option>
-                </select>
-            </label>
-            
-            <div style="margin-top: 25px; text-align: center;">
-                <button type="submit">💾 Salvar</button>
-                <a href="/atividades" class="button" style="background: #6c757d;">❌ Cancelar</a>
-            </div>
-        </form>
+<div class="dashboard-layout">
+    <!-- Sidebar (Menu de Navegação Fixo e Global) -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h1>
+                <span class="material-icons-round" style="color: var(--accent-yellow);">agriculture</span>
+                NPA
+            </h1>
+        </div>
+        <nav class="sidebar-nav">
+            <ul>
+                <li>
+                    <a href="/">
+                        <span class="material-icons-round">dashboard</span>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="/produtores">
+                        <span class="material-icons-round">group</span>
+                        Produtores
+                    </a>
+                </li>
+                <li>
+                    <a href="/atividades" class="active">
+                        <span class="material-icons-round">grass</span>
+                        Atividades
+                    </a>
+                </li>
+                <li>
+                    <a href="/visitas">
+                        <span class="material-icons-round">assignment</span>
+                        Visitas Técnicas
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </div>
+
+    <!-- Conteúdo Principal -->
+    <div class="main-content">
+        <div class="container">
+            <!-- Cabeçalho da Página -->
+            <div class="page-header">
+                <div>
+                    <div class="breadcrumb">
+                        <a href="/">
+                            <span class="material-icons-round">home</span>
+                            Início
+                        </a>
+                        <span class="material-icons-round">chevron_right</span>
+                        <a href="/atividades">Atividades</a>
+                        <span class="material-icons-round">chevron_right</span>
+                        <span>Nova</span>
+                    </div>
+                    <h1>
+                        <span class="material-icons-round" style="color: var(--primary-green);">add_task</span>
+                        Nova Atividade Agrícola
+                    </h1>
+                </div>
+            </div>
+
+            <!-- Barra de Ações -->
+            <div class="action-bar">
+                <a href="/atividades" class="btn btn-secondary">
+                    <span class="material-icons-round">arrow_back</span>
+                    Voltar para Lista
+                </a>
+            </div>
+
+            <!-- Card Informativo -->
+            <div class="info-box">
+                <div class="info-box-header">
+                    <span class="material-icons-round">info</span>
+                    <h4>Informações sobre Atividades</h4>
+                </div>
+                <p>
+                    Cadastre as atividades desenvolvidas pelos produtores rurais, seja de
+                    <strong>cultivo</strong> (plantio de grãos, hortaliças, frutas) ou
+                    <strong>animal</strong> (criação de bovinos, suínos, aves). Estas informações
+                    são essenciais para o acompanhamento técnico e planejamento das visitas.
+                </p>
+            </div>
+
+            <!-- Formulário -->
+            <form th:action="@{/atividades/salvar}" th:object="${atividade}" method="post" id="formAtividade">
+                <input type="hidden" th:field="*{id}"/>
+
+                <!-- Seção: Tipo de Atividade -->
+                <div class="form-section">
+                    <div class="form-section-header">
+                        <span class="material-icons-round">category</span>
+                        <h3>Tipo de Atividade</h3>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>
+                                Selecione o Tipo
+                                <span class="required">*</span>
+                            </label>
+                            <select th:field="*{tipo}" required id="tipoAtividade">
+                                <option value="">Selecione o tipo de atividade</option>
+                                <option value="Cultivo">Cultivo (Plantio e Colheita)</option>
+                                <option value="Animal">Animal (Criação e Pecuária)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Exemplos Cultivo -->
+                    <div id="exemplosCultivo" style="display: none; margin-top: 16px;" class="alert alert-success">
+                        <span class="material-icons-round">agriculture</span>
+                        <div>
+                            <strong>Exemplos de Cultivo:</strong>
+                            <p style="margin: 8px 0 0 0; font-size: 13px;">
+                                Soja, Milho, Feijão, Café, Cana-de-açúcar, Arroz, Trigo,
+                                Hortaliças (alface, tomate, cenoura), Frutas (laranja, banana, manga),
+                                Algodão, Mandioca, entre outros.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Exemplos Animal -->
+                    <div id="exemplosAnimal" style="display: none; margin-top: 16px;" class="alert alert-warning">
+                        <span class="material-icons-round">pets</span>
+                        <div>
+                            <strong>Exemplos de Criação Animal:</strong>
+                            <p style="margin: 8px 0 0 0; font-size: 13px;">
+                                Bovinos (gado de corte, gado leiteiro), Suínos, Aves (frangos de corte,
+                                galinhas poedeiras), Ovinos, Caprinos, Peixes (piscicultura), Equinos,
+                                Apicultura (abelhas), entre outros.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seção: Descrição -->
+                <div class="form-section">
+                    <div class="form-section-header">
+                        <span class="material-icons-round">description</span>
+                        <h3>Descrição da Atividade</h3>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>
+                                Descrição Detalhada
+                                <span class="required">*</span>
+                            </label>
+                            <input type="text"
+                                   th:field="*{descricao}"
+                                   required
+                                   placeholder="Ex: Cultivo de Soja Safra 2024, Criação de Gado Nelore, Plantio de Milho..."
+                                   id="descricaoAtividade"/>
+                            <span class="helper-text" id="helperDescricao">
+                                Seja específico. Inclua o nome da cultura, raça dos animais, área plantada,
+                                quantidade de cabeças, etc.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seção: Produtor -->
+                <div class="form-section">
+                    <div class="form-section-header">
+                        <span class="material-icons-round">person</span>
+                        <h3>Produtor Responsável</h3>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>
+                                Produtor Rural
+                                <span class="required">*</span>
+                            </label>
+                            <select th:field="*{produtor.id}" required id="produtorSelect">
+                                <option value="">Selecione o produtor responsável</option>
+                                <option th:each="p : ${produtores}"
+                                        th:value="${p.id}"
+                                        th:text="${p.nome + ' - ' + (p.localizacao ?: 'Localização não informada')}">
+                                </option>
+                            </select>
+                            <span class="helper-text">Produtor que desenvolve esta atividade</span>
+                        </div>
+                    </div>
+
+                    <!-- Alerta: Sem Produtores -->
+                    <div th:if="${produtores.isEmpty()}" class="alert alert-error mt-24">
+                        <span class="material-icons-round">warning</span>
+                        <div>
+                            <strong>Atenção:</strong> Não há produtores cadastrados no sistema.
+                            <a href="/produtores/novo" style="color: var(--error); font-weight: 600; text-decoration: underline;">
+                                Cadastre um produtor primeiro
+                            </a> para poder vincular esta atividade.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alerta de Campos Obrigatórios -->
+                <div class="alert alert-warning mt-24">
+                    <span class="material-icons-round">info</span>
+                    <span>Todos os campos marcados com <strong>*</strong> são obrigatórios</span>
+                </div>
+
+                <!-- Botões de Ação -->
+                <div class="action-bar" style="justify-content: center; margin-top: 32px;">
+                    <button type="submit" class="btn btn-lg" id="btnSalvar">
+                        <span class="material-icons-round">save</span>
+                        Salvar Atividade
+                    </button>
+                    <a href="/atividades" class="btn btn-secondary btn-lg">
+                        <span class="material-icons-round">close</span>
+                        Cancelar
+                    </a>
+                </div>
+            </form>
+
+            <!-- Informações Adicionais -->
+            <div class="info-box mt-24">
+                <div class="info-box-header">
+                    <span class="material-icons-round">lightbulb</span>
+                    <h4>Sobre o Cadastro de Atividades</h4>
+                </div>
+                <p style="margin-bottom: 16px;">
+                    O cadastro de atividades permite documentar todas as práticas agrícolas e pecuárias
+                    realizadas nas propriedades rurais, facilitando:
+                </p>
+                <ul style="margin-left: 24px; color: var(--text-secondary); line-height: 1.8; font-size: 14px;">
+                    <li>Acompanhamento das culturas plantadas e ciclos de safra</li>
+                    <li>Gestão do rebanho e inventário de criações</li>
+                    <li>Planejamento de visitas técnicas especializadas</li>
+                    <li>Análise de diversificação produtiva das propriedades</li>
+                    <li>Geração de relatórios estatísticos e análise de dados</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script para Interatividade (Mantido) -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const tipoSelect = document.getElementById('tipoAtividade');
+        const exemplosCultivo = document.getElementById('exemplosCultivo');
+        const exemplosAnimal = document.getElementById('exemplosAnimal');
+        const descricaoInput = document.getElementById('descricaoAtividade');
+        const helperDescricao = document.getElementById('helperDescricao');
+
+        // Função para atualizar a exibição e placeholders
+        function updateActivityExamples() {
+            const tipo = tipoSelect.value;
+
+            if (tipo === 'Cultivo') {
+                exemplosCultivo.style.display = 'flex';
+                exemplosAnimal.style.display = 'none';
+                descricaoInput.placeholder = 'Ex: Cultivo de Soja Safra 2024/2025 - 50 hectares';
+                helperDescricao.textContent = 'Especifique a cultura, área plantada, variedade, época de plantio, etc.';
+            } else if (tipo === 'Animal') {
+                exemplosCultivo.style.display = 'none';
+                exemplosAnimal.style.display = 'flex';
+                descricaoInput.placeholder = 'Ex: Criação de Gado Nelore - 150 cabeças';
+                helperDescricao.textContent = 'Especifique a espécie, raça, quantidade de animais, finalidade (corte/leite), etc.';
+            } else {
+                exemplosCultivo.style.display = 'none';
+                exemplosAnimal.style.display = 'none';
+                descricaoInput.placeholder = 'Digite a descrição detalhada da atividade';
+                helperDescricao.textContent = 'Seja específico. Inclua informações relevantes sobre a atividade.';
+            }
+        }
+
+        // Mostrar exemplos baseados no tipo selecionado
+        tipoSelect.addEventListener('change', updateActivityExamples);
+
+        // Inicializar a exibição no carregamento da página (caso o campo já venha preenchido)
+        updateActivityExamples();
+
+        // Validação do formulário
+        const form = document.getElementById('formAtividade');
+        form.addEventListener('submit', function(e) {
+            const tipo = tipoSelect.value;
+            const descricao = descricaoInput.value.trim();
+            const produtor = document.getElementById('produtorSelect').value;
+
+            if (!tipo || !descricao || !produtor) {
+                e.preventDefault();
+                alert('Por favor, preencha todos os campos obrigatórios antes de salvar.');
+                return false;
+            }
+
+            // Feedback visual
+            const btnSalvar = document.getElementById('btnSalvar');
+            btnSalvar.innerHTML = '<span class="material-icons-round">hourglass_empty</span> Salvando...';
+            btnSalvar.disabled = true;
+        });
+
+        // Animação suave nos campos (Removida)
+        // const campos = document.querySelectorAll('input, select, textarea');
+        // campos.forEach((campo, index) => {
+        //     campo.style.opacity = '0';
+        //     campo.style.transform = 'translateY(10px)';
+        //     setTimeout(() => {
+        //         campo.style.transition = 'all 0.3s ease';
+        //         campo.style.opacity = '1';
+        //         campo.style.transform = 'translateY(0)';
+        //     }, index * 20);
+        // });
+    });
+</script>
 </body>
 </html>
