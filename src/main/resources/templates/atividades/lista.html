@@ -114,12 +114,20 @@
             </div>
 
             <!-- Barra de Ações -->
-            <div class="action-bar mt-24">
-                <a href="/atividades/novo" class="btn">
-                    <span class="material-icons-round">add</span>
-                    Nova Atividade
-                </a>
-                <div class="spacer"></div>
+	            <div class="action-bar mt-24">
+	                <a href="/atividades/novo" class="btn">
+	                    <span class="material-icons-round">add</span>
+	                    Nova Atividade
+	                </a>
+	                <!-- Campo de Pesquisa -->
+	                <form th:action="@{/atividades}" method="get" class="search-form" style="margin-right: 16px;">
+	                    <div class="form-group" style="margin-bottom: 0;">
+	                        <input type="text" id="termoBusca" name="termoBusca" th:value="${termoBusca}"
+	                               placeholder="Pesquisar por descrição ou produtor..."
+	                               style="width: 300px; padding: 10px 16px; border-radius: 8px; border: 1px solid var(--border-color);">
+	                    </div>
+	                </form>
+	                <div class="spacer"></div>
                 <div class="stats-badge">
                     <span class="material-icons-round">analytics</span>
                     <span>Total: <strong th:text="${atividades.size()}">0</strong> atividade(s)</span>
